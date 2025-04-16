@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="AToolforManagingStudentSoftwareProjects.main:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/AToolforManagingStudentSoftwareProjects_main_Web_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="AToolforManagingStudentSoftwareProjects.main/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="AToolforManagingStudentSoftwareProjects.main" />
+          <element id="module-output" name="AToolforManagingStudentSoftwareProjects.test" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="AToolforManagingStudentSoftwareProjects.test/web/Web" />
+    </root>
+  </artifact>
+</component>
