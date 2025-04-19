@@ -17,13 +17,14 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/login", "/login/**", "/register", "/js/**", "/css/**", "/images/**", "/webjars/**", "/test").permitAll() // allow login page and static files
+                        .requestMatchers("/login","/register", "/js/**", "/css/**").permitAll() // allow login page and static files
                         .anyRequest().authenticated() // everything else requires login
                         //.anyRequest().permitAll()
                 )
                 .formLogin((form) -> form
 
                         .loginPage("/login") // Tells spring to gtuse custom login page
+                        .defaultSuccessUrl("/home")
                         .permitAll()
 
                 )

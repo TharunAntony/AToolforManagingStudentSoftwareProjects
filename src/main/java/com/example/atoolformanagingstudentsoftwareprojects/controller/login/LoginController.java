@@ -20,10 +20,6 @@ public class LoginController {
         return "login";
     }
 
-    @GetMapping("/test")
-    public String secureTest() {
-        return "home";
-    }
 
 
 }

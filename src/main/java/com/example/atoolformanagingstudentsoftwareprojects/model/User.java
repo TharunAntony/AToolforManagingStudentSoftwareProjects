@@ -9,7 +9,11 @@ public class User {
     private int id;
     private String username;
     private String password;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     private String firstName;
+    private String lastName;
+    private String email;
 
     public User(int id, String username, String password, String firstName) {
         this.id = id;
