@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/register.css}">
+</head>
+<body>
+
+<div class="header">
+    <img src="../images/University_of_Leicester_logo_pillars.jpg" alt="University of Leicester Logo" class="logo">
+    <h1>Student Software Project Management System</h1>
+</div>
+
+<div class="register-container">
+    <h2>Register</h2>
+
+    <form th:action="@{/register}" th:object="${registrationForm}" method="post">
+        <div class="input-group">
+            <label>Username:</label>
+            <input type="text" th:field="*{username}" required />
+
+            <label>Password:</label>
+            <input type="password" th:field="*{password}" required />
+
+            <label>First Name:</label>
+            <input type="text" th:field="*{firstName}" required />
+
+            <label>Last Name:</label>
+            <input type="text" th:field="*{lastName}" required />
+
+            <label>Email:</label>
+            <input type="email" th:field="*{email}" required />
+
+            <label>Role:</label>
+            <select th:field="*{role}" required>
+                <option value="">Select Role</option>
+                <option value="STUDENT">Student</option>
+                <option value="CONVENOR">Convenor</option>
+            </select>
+        </div>
+
+        <button type="submit" class="register-button">Register</button>
+
+        <div th:if="${usernameError}" class="error-message">
+            <p th:text="${usernameError}"></p>
+        </div>
+
+        <p class="login-link">Already have an account? <a href="/login">Login here</a></p>
+    </form>
+</div>
+
+</body>
+</html>

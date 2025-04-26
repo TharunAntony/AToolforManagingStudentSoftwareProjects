@@ -1,5 +1,6 @@
 package com.example.atoolformanagingstudentsoftwareprojects.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,19 +14,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig{
+
+    @Autowired
+    private AuthenticationHandler authenticationSuccessHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
                         // allow login page and static files
-                        .requestMatchers("/login","/register", "/js/**", "/css/**").permitAll()
+                        .requestMatchers("/login","/register", "/images/**", "/css/**").permitAll()
                         // everything else requires login
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
 
-                        .loginPage("/login") // Tells spring to gtuse custom login page
-                        .defaultSuccessUrl("/home")
+                        //Tells spring to use custom login page
+                        .loginPage("/login")
+                        .successHandler(authenticationSuccessHandler)
                         .permitAll()
 
                 )
