@@ -21,7 +21,6 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Groups> groups;
 
-
     //List of all the submissions made for the project
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Submission> submissions = new ArrayList<>();
@@ -30,6 +29,7 @@ public class Project {
     private String Title;
     private String Description;
     private LocalDateTime Deadline;
+    private Integer groupCapacity;
 
     //Empty Constructor
     public Project(){
@@ -83,5 +83,21 @@ public class Project {
 
     public void setSubmissions(List<Submission> submissions) {
         this.submissions = submissions;
+    }
+
+    public int getGroupCapacity() {
+        return groupCapacity;
+    }
+
+    public void setGroupCapacity(Integer groupCapacity) {
+        this.groupCapacity = groupCapacity;
+    }
+
+    public List<Groups> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<Groups> groups) {
+        this.groups = groups;
     }
 }

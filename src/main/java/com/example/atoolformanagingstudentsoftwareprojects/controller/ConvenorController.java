@@ -28,8 +28,4 @@ public class ConvenorController {
         return "convenor/home";
     }
 
-    @GetMapping("/convenor/create-project")
-    public String convenorCreateProject(){
-        return "convenor/create-project";
-    }
 }

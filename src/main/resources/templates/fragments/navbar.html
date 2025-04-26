@@ -1,0 +1,14 @@
+<!--Template of the nav bar -->
+<div class="navbar" th:fragment="navbar">
+    <div class="navbar-left">
+        <a th:href="@{/convenor/home}">Home</a>
+        <a th:href="@{/convenor/projects}">Projects</a>
+        <a th:href="@{/convenor/create-project}">Create Project</a>
+        <a th:href="@{/convenor/submissions}">Submissions</a>
+    </div>
+
+    <div class="navbar-right">
+        <a class="account" th:href="@{/account}" th:text="${username}"></a> |
+        <a class="logout" th:href="@{/logout}">Logout</a>
+    </div>
+</div>

@@ -4,23 +4,12 @@
     <meta charset="UTF-8">
     <title>Convenor Home</title>
     <link rel="stylesheet" href="/css/convenorHome.css">
+    <link rel="stylesheet" href="/css/navbar.css">
 </head>
 <body>
 
 <!-- Navigation bar -->
-<nav class="navbar">
-    <div class="navbar-left">
-        <a th:href="@{/convenor/home}">Home</a>
-        <a th:href="@{/convenor/projects}">Projects</a>
-        <a th:href="@{/convenor/create-project}">Create Project</a>
-        <a th:href="@{/convenor/submissions}">Submissions</a>
-    </div>
-
-    <div class="navbar-right">
-        <p><span th:text="${username}"></span></p> |
-        <a th:href="@{/logout}">Logout</a>
-    </div>
-</nav>
+<div th:replace="fragments/navbar :: navbar"></div>
 
 <!-- Main home page -->
 <div class="content">
