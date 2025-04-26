@@ -27,21 +27,9 @@ public class AToolforManagingStudentSoftwareProjectsApplication {
 @Component
 class DataInitializer implements CommandLineRunner {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @Override
     public void run(String... args) throws Exception {
-        usersave();
-    }
 
-    public void usersave(){
-        User u1 = new User();
-        u1.setUsername("John");
-        u1.setPassword(passwordEncoder.encode("1234"));
-        userRepository.save(u1);
     }
 
 

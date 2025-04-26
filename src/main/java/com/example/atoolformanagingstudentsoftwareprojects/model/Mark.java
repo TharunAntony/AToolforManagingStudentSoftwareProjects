@@ -13,7 +13,7 @@ public class Mark {
     //Which students marks it is
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private User student;
+    private StudentDetails student;
 
     //For which project
     @ManyToOne
@@ -35,7 +35,7 @@ public class Mark {
         return id;
     }
 
-    public User getStudent() {
+    public StudentDetails getStudent() {
         return student;
     }
 
@@ -55,7 +55,7 @@ public class Mark {
         this.id = id;
     }
 
-    public void setStudent(User student) {
+    public void setStudent(StudentDetails student) {
         this.student = student;
     }
 

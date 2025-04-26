@@ -18,7 +18,7 @@ public class GroupMember {
     //Student details
     @ManyToOne
     @JoinColumn(name = "student_id")
-    private User student;
+    private StudentDetails student;
 
     //Empty Constructor
     public GroupMember() {}
@@ -40,11 +40,11 @@ public class GroupMember {
         this.group = group;
     }
 
-    public User getStudent() {
+    public StudentDetails getStudent() {
         return student;
     }
 
-    public void setStudent(User student) {
+    public void setStudent(StudentDetails student) {
         this.student = student;
     }
 }

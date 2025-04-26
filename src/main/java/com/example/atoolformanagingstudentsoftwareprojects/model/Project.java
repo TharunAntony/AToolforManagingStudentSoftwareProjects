@@ -16,7 +16,7 @@ public class Project {
     //The convenor for the project
     @ManyToOne
     @JoinColumn(name = "convenor_id")
-    private User Convenor;
+    private ConvenorDetails Convenor;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Groups> groups;
@@ -60,12 +60,12 @@ public class Project {
         Description = description;
     }
 
-    public User getConvenor() {
+    public ConvenorDetails getConvenor() {
 
         return Convenor;
     }
 
-    public void setConvenor(User convenor) {
+    public void setConvenor(ConvenorDetails convenor) {
         Convenor = convenor;
     }
 

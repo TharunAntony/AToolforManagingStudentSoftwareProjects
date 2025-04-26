@@ -17,9 +17,10 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/login","/register", "/js/**", "/css/**").permitAll() // allow login page and static files
-                        .anyRequest().authenticated() // everything else requires login
-                        //.anyRequest().permitAll()
+                        // allow login page and static files
+                        .requestMatchers("/login","/register", "/js/**", "/css/**").permitAll()
+                        // everything else requires login
+                        .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
 
@@ -39,6 +40,7 @@ public class SecurityConfig{
     }
 
 
+    //Used to encrypt password
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
