@@ -2,37 +2,45 @@ package com.example.atoolformanagingstudentsoftwareprojects.model;
 
 import jakarta.persistence.*;
 
+//Table to store all users
 @Entity
 public class User {
 
+    //Primary key id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
+
+    //Username and password for user
     private String username;
     private String password;
+
+    //Details of user
     @Enumerated(EnumType.STRING)
     private Role role;
     private String firstName;
     private String lastName;
     private String email;
 
-    public User(int id, String username, String password, String firstName) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.firstName = firstName;
-    }
+    //Link to studentDetails
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL)
+    private StudentDetails studentDetails;
 
+    //Link to convenorDetails
+    @OneToOne(mappedBy = "convenor", cascade = CascadeType.ALL)
+    private ConvenorDetails convenorDetails;
 
+    //Empty Constructor
     public User() {
-
     }
 
-    public int getId() {
+
+    //Getters and setters
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -52,5 +60,51 @@ public class User {
         this.password = password;
     }
 
+    public Role getRole() {
+        return role;
+    }
 
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public StudentDetails getStudentDetails() {
+        return studentDetails;
+    }
+
+    public void setStudentDetails(StudentDetails studentDetails) {
+        this.studentDetails = studentDetails;
+    }
+
+    public ConvenorDetails getConvenorDetails() {
+        return convenorDetails;
+    }
+
+    public void setConvenorDetails(ConvenorDetails convenorDetails) {
+        this.convenorDetails = convenorDetails;
+    }
 }
