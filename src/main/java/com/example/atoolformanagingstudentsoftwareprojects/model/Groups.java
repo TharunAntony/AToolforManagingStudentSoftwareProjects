@@ -6,6 +6,7 @@ import java.util.List;
 
 //Table to store the groups
 @Entity
+@Table(name = "groups_table")
 public class Groups {
 
     @Id

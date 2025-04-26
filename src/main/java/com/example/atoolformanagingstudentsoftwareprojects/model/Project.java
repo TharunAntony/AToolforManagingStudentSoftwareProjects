@@ -16,7 +16,7 @@ public class Project {
     //The convenor for the project
     @ManyToOne
     @JoinColumn(name = "convenor_id")
-    private ConvenorDetails Convenor;
+    private ConvenorDetails convenor;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Groups> groups;
@@ -62,11 +62,11 @@ public class Project {
 
     public ConvenorDetails getConvenor() {
 
-        return Convenor;
+        return convenor;
     }
 
     public void setConvenor(ConvenorDetails convenor) {
-        Convenor = convenor;
+        this.convenor = convenor;
     }
 
     public LocalDateTime getDeadline() {
