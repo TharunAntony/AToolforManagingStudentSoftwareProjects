@@ -54,3 +54,9 @@
 .navbar-right a.account:hover {
     background-color: #8c8c8c;
 }
+
+.inline-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}

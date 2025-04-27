@@ -2,23 +2,23 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Convenor Home</title>
-    <link rel="stylesheet" href="/css/convenor/Home.css">
-    <link rel="stylesheet" href="/css/convenor/navbar.css">
+    <title>Student Home</title>
+    <link rel="stylesheet" href="/css/student/home.css">
+    <link rel="stylesheet" href="/css/student/navBar.css">
 </head>
 <body>
 
 <!-- Navigation bar -->
-<div th:replace="fragments/navbar :: navbar"></div>
+<div th:replace="fragments/studentNavbar :: navbar"></div>
 
 <!-- Main home page -->
 <div class="content">
     <h1>Welcome, <span th:text="${firstName}"></span>!</h1>
 
-    <h2>Your Managed Projects:</h2>
+    <h2>Current Projects:</h2>
     <ul>
         <li th:each="project : ${projects}">
-            <span th:text="${project.Title}"></span>
+            <span th:text="${project.title}"></span>
         </li>
     </ul>
 </div>

@@ -1,0 +1,17 @@
+<!-- Template for navigation bar used for student pages -->
+<div class="navbar" th:fragment="navbar">
+    <div class="navbar-left">
+        <a th:href="@{/student/home}">Home</a>
+        <a th:href="@{/student/projects}">Projects</a>
+        <a th:href="@{/student/preferences}">Preferences</a>
+        <a th:href="@{/student/groups}">Groups</a>
+    </div>
+
+    <div class="navbar-right">
+        <a th:href="@{/account}" class="account-btn" th:text="${username}">Account</a>
+
+        <form th:action="@{/logout}" method="post" class="inline-form">
+            <button type="submit" class="logout-btn">Logout</button>
+        </form>
+    </div>
+</div>

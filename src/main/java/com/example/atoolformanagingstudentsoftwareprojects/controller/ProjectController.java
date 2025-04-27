@@ -10,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,7 +34,7 @@ public class ProjectController {
         return "redirect:/convenor/home";
     }
 
-    // Show all projects
+    //Shows all projects a convenor is moderating
     @GetMapping("/projects")
     public String showProjects(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         User user = currentUser.getUser();
@@ -47,6 +44,21 @@ public class ProjectController {
         model.addAttribute("username", currentUser.getUsername());
 
         return "convenor/projects";
+    }
+
+    //Shows a page with the details of a single project
+    @GetMapping("/project/{id}")
+    public String viewProject(@PathVariable Long id, Model model) {
+        //Grab the project if it exists, otherwise throw error
+        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+
+        model.addAttribute("project", project);
+
+        //Add groups and students to the model if needed
+        model.addAttribute("groups", project.getGroups());
+        model.addAttribute("students", project.getStudents());
+
+        return "convenor/viewProject";
     }
 
 }

@@ -1,0 +1,67 @@
+/* Main navbar */
+.navbar {
+    background-color: #343434;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Links on left side */
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Hover effect for all links */
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* Left container */
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+/* Right container */
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+
+/* Buttons and styled links */
+.navbar button, .navbar-right a.logout-btn, .navbar-right a.account-btn {
+    background-color: #343434;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 10px;
+    margin-right: 5px;
+}
+
+/* Hover effects */
+.navbar button:hover,
+.navbar-right a.logout-btn:hover {
+    background-color: #a50f26;
+}
+
+.navbar-right a.account-btn:hover {
+    background-color: #8c8c8c;
+}
+
+/* Form for logout should be inline */
+.inline-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}
