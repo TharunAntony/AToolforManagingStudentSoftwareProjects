@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Projects</title>
+    <link rel="stylesheet" href="/css/convenorProjects.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="content">
+    <h1>Your Managed Projects:</h1>
+
+    <table class="project-table">
+        <thead>
+        <tr>
+            <th>Project Title</th>
+            <th>Deadline</th>
+            <th style="width: 300px;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="project : ${projects}">
+            <td th:text="${project.title}"></td>
+            <td th:text="${#temporals.format(project.deadline, 'dd-MM-yyyy HH:mm')}"></td>
+            <td class="action-buttons">
+                <a th:href="@{'/convenor/project/details/' + ${project.id}}" class="details-btn">View Details</a>
+                <a th:href="@{'/convenor/project/manage/' + ${project.id}}" class="manage-btn">Manage Project</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

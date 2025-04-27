@@ -18,8 +18,18 @@ public class Project {
     @JoinColumn(name = "convenor_id")
     private ConvenorDetails convenor;
 
+    //List of groups in a project
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Groups> groups;
+
+    @ManyToMany
+    @JoinTable(
+            name = "project_students",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "student_id")
+    )
+    private List<StudentDetails> students = new ArrayList<>();
+
 
     //List of all the submissions made for the project
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -99,5 +109,13 @@ public class Project {
 
     public void setGroups(List<Groups> groups) {
         this.groups = groups;
+    }
+
+    public List<StudentDetails> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<StudentDetails> students) {
+        this.students = students;
     }
 }

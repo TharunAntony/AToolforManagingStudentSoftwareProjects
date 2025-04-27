@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+.content {
+    padding: 30px;
+}
+
+h1{
+    color: #002147;
+}
+
+.project-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.project-table th, .project-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+.project-table th {
+    background-color: #002147;
+    color: white;
+}
+
+.project-table .action-buttons {
+    white-space: nowrap;
+}
+
+.project-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.project-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.details-btn, .manage-btn {
+    padding: 8px 16px;
+    margin: 4px;
+    background-color: #c8102e;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.details-btn:hover, .manage-btn:hover {
+    background-color: #a50f26;
+}

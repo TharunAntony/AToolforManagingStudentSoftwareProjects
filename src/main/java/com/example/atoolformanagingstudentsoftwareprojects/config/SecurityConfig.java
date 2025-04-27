@@ -22,9 +22,9 @@ public class SecurityConfig{
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        // allow login page and static files
+                        //allow login page and static files
                         .requestMatchers("/login","/register", "/images/**", "/css/**").permitAll()
-                        // everything else requires login
+                        //everything else requires login
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

@@ -1,5 +1,5 @@
 .navbar {
-    background-color: #002147;
+    background-color: #343434;
     color: white;
     padding: 10px 20px;
     display: flex;
@@ -36,7 +36,7 @@
 }
 
 .navbar button, .navbar-right a.logout, .navbar-right a.account {
-    background-color: #002147;
+    background-color: #343434;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -52,5 +52,5 @@
 }
 
 .navbar-right a.account:hover {
-    background-color: #003366;
+    background-color: #8c8c8c;
 }

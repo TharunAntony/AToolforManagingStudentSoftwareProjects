@@ -17,6 +17,11 @@ public class StudentDetails {
     @JoinColumn(name = "student_id", nullable = false)
     private User student;
 
+    //List of projects a student has
+    @ManyToMany(mappedBy = "students")
+    private List<Project> projects = new ArrayList<>();
+
+
     //List of groups they are part of
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupMember> groupMemberships = new ArrayList<>();
@@ -63,5 +68,13 @@ public class StudentDetails {
 
     public void setMarks(List<Mark> marks) {
         this.marks = marks;
+    }
+
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 }

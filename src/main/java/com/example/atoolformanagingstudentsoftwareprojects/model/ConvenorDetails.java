@@ -20,7 +20,7 @@ public class ConvenorDetails {
     private User convenor;
 
     // Projects managed by this convenor
-    @OneToMany(mappedBy = "convenor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "convenor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Project> projects = new ArrayList<>();
 
     //Empty Constructor
