@@ -1,13 +1,12 @@
 package com.example.atoolformanagingstudentsoftwareprojects.repository;
 
 import com.example.atoolformanagingstudentsoftwareprojects.model.StudentDetails;
-import com.example.atoolformanagingstudentsoftwareprojects.model.User;
+import com.example.atoolformanagingstudentsoftwareprojects.model.StudentPreferences;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StudentDetailsRepository extends JpaRepository<StudentDetails, Long> {
+public interface StudentPreferencesRepository extends JpaRepository<StudentPreferences, Long> {
 
-    StudentDetails findByStudent(User user);
+    StudentPreferences findByStudentDetails(StudentDetails studentDetails);
 }

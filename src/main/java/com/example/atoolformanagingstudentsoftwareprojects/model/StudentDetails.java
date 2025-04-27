@@ -26,6 +26,10 @@ public class StudentDetails {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<GroupMember> groupMemberships = new ArrayList<>();
 
+    //They set of preferences used to form groups
+    @OneToOne(mappedBy = "studentDetails", cascade = CascadeType.ALL)
+    private StudentPreferences studentPreferences;
+
     //Marks received
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Mark> marks = new ArrayList<>();

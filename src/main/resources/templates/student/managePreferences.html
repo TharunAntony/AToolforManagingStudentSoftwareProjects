@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Preferences</title>
+    <link rel="stylesheet" href="/css/student/managePreferences.css">
+    <link rel="stylesheet" href="/css/student/navBar.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/studentNavbar :: navbar"></div>
+
+<div class="container">
+
+    <h1>Manage My Preferences</h1>
+
+    <form th:action="@{/student/preferences/manage}" th:object="${preferencesForm}" method="post">
+
+        <div class="form-group">
+            <label>Preferred Working Style:</label>
+            <div class="radio-group">
+                <input type="radio" th:field="*{workingStyle}" value="1" required> Independent
+                <input type="radio" th:field="*{workingStyle}" value="2"> Collaborative
+                <input type="radio" th:field="*{workingStyle}" value="3"> Flexible
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Preferred Working Hours:</label>
+            <div class="radio-group">
+                <input type="radio" th:field="*{workingHours}" value="1" required> Morning
+                <input type="radio" th:field="*{workingHours}" value="2"> Afternoon
+                <input type="radio" th:field="*{workingHours}" value="3"> Evening
+                <input type="radio" th:field="*{workingHours}" value="4"> No preference
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Technical Skills (1-5):</label>
+            <input type="range" min="1" max="5" th:field="*{technicalSkill}" required> 
+        </div>
+
+        <div class="form-group">
+            <label>Communication Skills (1-5):</label>
+            <input type="range" min="1" max="5" th:field="*{communicationSkill}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Leadership Preference:</label>
+            <div class="radio-group">
+                <input type="radio" th:field="*{leadershipPreference}" value="1" required> Prefer to Lead
+                <input type="radio" th:field="*{leadershipPreference}" value="2"> Prefer to Support
+                <input type="radio" th:field="*{leadershipPreference}" value="3"> No Preference
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Deadline Approach:</label>
+            <div class="radio-group">
+                <input type="radio" th:field="*{deadlineApproach}" value="1" required> Finish Early
+                <input type="radio" th:field="*{deadlineApproach}" value="2"> Finish Close to Deadline
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Teamwork Experience Level (1-5):</label>
+            <input type="range" min="1" max="5" th:field="*{teamworkExperience}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Prior Experience with Project Type:</label>
+            <div class="radio-group">
+                <input type="radio" th:field="*{priorExperience}" value="1" required> Yes
+                <input type="radio" th:field="*{priorExperience}" value="0"> No
+            </div>
+        </div>
+
+        <button type="submit" class="submit-btn">Save Preferences</button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

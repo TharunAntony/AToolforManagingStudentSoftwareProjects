@@ -28,4 +28,5 @@ public class StudentService {
         // Assuming projects are join-fetched, otherwise lazy-loading risk
         return studentDetails.getProjects();
     }
+
 }

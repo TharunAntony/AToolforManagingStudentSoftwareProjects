@@ -28,7 +28,7 @@
     <section class="section">
         <h2>Project Groups</h2>
         <div th:if="${#lists.isEmpty(groups)}">
-            <p>No groups created yet. <a href="#" class="create-link">Create one?</a></p>
+            <p>No groups created yet.</p>
         </div>
         <ul th:if="${!#lists.isEmpty(groups)}">
             <li th:each="group : ${groups}">
