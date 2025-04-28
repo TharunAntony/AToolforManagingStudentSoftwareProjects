@@ -1,10 +1,6 @@
 package com.example.atoolformanagingstudentsoftwareprojects.service;
 
-import com.example.atoolformanagingstudentsoftwareprojects.model.Project;
-import com.example.atoolformanagingstudentsoftwareprojects.model.Groups;
-import com.example.atoolformanagingstudentsoftwareprojects.model.GroupMember;
-import com.example.atoolformanagingstudentsoftwareprojects.model.User;
-import com.example.atoolformanagingstudentsoftwareprojects.model.StudentPreferences;
+import com.example.atoolformanagingstudentsoftwareprojects.model.*;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.GroupMemberRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.GroupsRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
@@ -18,6 +14,7 @@ public class GroupService {
 
     @Autowired
     private ProjectService projectService;
+
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -26,7 +23,6 @@ public class GroupService {
 
     @Autowired
     private GroupMemberRepository groupMembersRepository;
-
 
     public void autoAllocateGroups(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -38,25 +34,29 @@ public class GroupService {
             throw new IllegalStateException("No students assigned to project.");
         }
 
-        //Get all students already assigned to a group in this project
+        // Get all students already assigned to a group
         List<GroupMember> alreadyGrouped = groupMembersRepository.findByGroup_Project(project);
         Set<Long> groupedStudentIds = new HashSet<>();
 
         for (GroupMember gm : alreadyGrouped) {
-            groupedStudentIds.add(gm.getStudent().getId());
+            groupedStudentIds.add(gm.getStudent().getStudent().getId());
         }
 
-        //Getting of the students already assigned to a project
         List<User> ungroupedStudents = new ArrayList<>();
         for (User student : students) {
-            if (!groupedStudentIds.contains(student.getStudentDetails().getId())) {
+            if (!groupedStudentIds.contains(student.getId())) {
                 ungroupedStudents.add(student);
             }
         }
 
         students = ungroupedStudents;
 
-        //Separating students who have set their preference and students who haven't
+        //Calculate groups based on students
+        int totalStudents = students.size();
+        int groupCapacity = project.getGroupCapacity();
+        int numGroups = (int) Math.ceil((double) totalStudents / groupCapacity);
+
+        //Separate students with and without preferences
         List<User> studentsWithPreferences = new ArrayList<>();
         List<User> studentsWithoutPreferences = new ArrayList<>();
 
@@ -65,24 +65,15 @@ public class GroupService {
             if (prefs != null) {
                 studentsWithPreferences.add(student);
             } else {
-                //storing students without preferences to randomly assign later
                 studentsWithoutPreferences.add(student);
             }
         }
 
-        //Allocating the student with preferences first
         students = studentsWithPreferences;
 
         Collections.shuffle(students);
 
-        int groupCapacity = project.getGroupCapacity();
-        int totalStudents = students.size();
-        int numGroups = (int) Math.ceil((double) totalStudents / groupCapacity);
-
-        int baseGroupSize = totalStudents / numGroups;
-        int extraGroups = totalStudents % numGroups; // Groups that get 1 extra member
-
-        // Build compatibility matrix
+        //Build compatibility matrix to see whose preferences match
         Map<User, Map<User, Double>> compatibilityMatrix = new HashMap<>();
         for (User s1 : students) {
             Map<User, Double> scores = new HashMap<>();
@@ -98,7 +89,7 @@ public class GroupService {
         List<User> seeds = new ArrayList<>();
         List<User> unassigned = new ArrayList<>(students);
 
-        // Pick seeds (leaders or no preference)
+        // Pick seeds (leaders or flexible students)
         for (Iterator<User> it = unassigned.iterator(); it.hasNext() && seeds.size() < numGroups;) {
             User student = it.next();
             int leadership = student.getStudentDetails().getStudentPreferences().getLeadershipPreference();
@@ -116,13 +107,14 @@ public class GroupService {
 
         List<Groups> groups = new ArrayList<>();
 
+        int groupNum = 0;
+        // Create groups with seed students
         for (User seed : seeds) {
+            groupNum++;
             Groups group = new Groups();
             group.setProject(project);
+            group.setGroupName("Group " + groupNum);
             group = groupRepository.save(group);
-
-            group.setGroupName("Group " + group.getId());
-            groupRepository.save(group);
 
             GroupMember member = new GroupMember();
             member.setGroup(group);
@@ -132,28 +124,37 @@ public class GroupService {
             groups.add(group);
         }
 
+        // Track which groups are still available
+        List<Groups> availableGroups = new ArrayList<>(groups);
         Random random = new Random();
-        int groupIndex = 0;
 
+        // Track group sizes - this is the key fix
+        Map<Long, Integer> groupSizes = new HashMap<>();
+        for (Groups group : groups) {
+            groupSizes.put(group.getId(), 1); // Start with 1 for seed member
+        }
+
+        // Assign unassigned students with preferences
         while (!unassigned.isEmpty()) {
             User student = unassigned.remove(random.nextInt(unassigned.size()));
 
             double bestScore = -1;
             Groups bestGroup = null;
 
-            for (Groups group : groups) {
-                int currentSize = group.getGroupMembers().size();
-                int expectedSize = baseGroupSize + (groups.indexOf(group) < extraGroups ? 1 : 0);
-
-                if (currentSize >= expectedSize) {
+            for (Groups group : availableGroups) {
+                int currentSize = groupSizes.get(group.getId());
+                if (currentSize >= groupCapacity) {
                     continue;
                 }
 
+                // For compatibility calculation, we need the actual members
+                List<GroupMember> groupMembers = groupMembersRepository.findByGroup(group);
+
                 double totalCompat = 0;
-                for (GroupMember gm : group.getGroupMembers()) {
-                    totalCompat += compatibilityMatrix.get(student).getOrDefault(gm.getStudent(), 0.5);
+                for (GroupMember gm : groupMembers) {
+                    totalCompat += compatibilityMatrix.get(student).getOrDefault(gm.getStudent().getStudent(), 0.5);
                 }
-                double avgCompat = group.getGroupMembers().isEmpty() ? 0.5 : totalCompat / group.getGroupMembers().size();
+                double avgCompat = groupMembers.isEmpty() ? 0.5 : totalCompat / groupMembers.size();
 
                 if (avgCompat > bestScore) {
                     bestScore = avgCompat;
@@ -166,41 +167,49 @@ public class GroupService {
                 member.setGroup(bestGroup);
                 member.setStudent(student.getStudentDetails());
                 groupMembersRepository.save(member);
-            } else {
-                // fallback
-                Groups fallbackGroup = groups.get(groupIndex);
-                GroupMember member = new GroupMember();
-                member.setGroup(fallbackGroup);
-                member.setStudent(student.getStudentDetails());
-                groupMembersRepository.save(member);
 
-                groupIndex = (groupIndex + 1) % groups.size();
+                // Update the group size in our tracking map
+                int newSize = groupSizes.get(bestGroup.getId()) + 1;
+                groupSizes.put(bestGroup.getId(), newSize);
+
+                if (newSize >= groupCapacity) {
+                    availableGroups.remove(bestGroup);
+                }
+            } else {
+                throw new IllegalStateException("No available group with space left!");
             }
         }
 
-        //Now assign students without preferences randomly, trying to fill smaller groups first
+        // Now assign students without preferences randomly
         for (User student : studentsWithoutPreferences) {
             Groups smallestGroup = null;
             int minSize = Integer.MAX_VALUE;
 
-            //Find the group with the fewest members
-            for (Groups group : groups) {
-                int groupSize = group.getGroupMembers().size();
-                if (groupSize < minSize) {
+            for (Groups group : availableGroups) {
+                int groupSize = groupSizes.get(group.getId());
+                if (groupSize < minSize && groupSize < groupCapacity) {
                     minSize = groupSize;
                     smallestGroup = group;
                 }
             }
 
-            //Randomly assign the rest into groups
             if (smallestGroup != null) {
                 GroupMember member = new GroupMember();
                 member.setGroup(smallestGroup);
                 member.setStudent(student.getStudentDetails());
                 groupMembersRepository.save(member);
+
+                // Update the group size in our tracking map
+                int newSize = groupSizes.get(smallestGroup.getId()) + 1;
+                groupSizes.put(smallestGroup.getId(), newSize);
+
+                if (newSize >= groupCapacity) {
+                    availableGroups.remove(smallestGroup);
+                }
+            } else {
+                throw new IllegalStateException("No available group for students without preferences!");
             }
         }
-
     }
 
     private double calculateCompatibility(User s1, User s2) {
@@ -231,10 +240,52 @@ public class GroupService {
 
         score += (p1.getTeamworkExperience() + p2.getTeamworkExperience()) / 10.0 * 0.15;
 
-        if (p1.getPriorExperience()|| p2.getPriorExperience()) {
+        if (p1.getPriorExperience() || p2.getPriorExperience()) {
             score += 0.15;
         }
 
         return score;
+    }
+
+    public Map<Long, Double> evaluateGroupCompatibility(List<Groups> groups) {
+        Map<Long, Double> groupScores = new HashMap<>();
+
+        for (Groups group : groups) {
+            List<GroupMember> members = groupMembersRepository.findByGroup(group);
+            double totalCompat = 0;
+            int pairCount = 0;
+
+            // Calculate compatibility between each pair
+            for (int i = 0; i < members.size(); i++) {
+                for (int j = i+1; j < members.size(); j++) {
+                    try {
+                        User u1 = members.get(i).getStudent().getStudent();
+                        User u2 = members.get(j).getStudent().getStudent();
+
+                        // Skip if either user is null
+                        if (u1 == null || u2 == null) {
+                            totalCompat += 0.5; // Default neutral compatibility
+                            pairCount++;
+                            continue;
+                        }
+
+                        // Calculate compatibility and handle potential exceptions
+                        double compatScore = calculateCompatibility(u1, u2);
+                        totalCompat += compatScore;
+                        pairCount++;
+                    } catch (Exception exception) {
+                        // If any error occurs during compatibility calculation, use a default score of 0.5 (neutral compatibility)
+                        totalCompat += 0.5;
+                        pairCount++;
+                    }
+                }
+            }
+
+            // Calculate average compatibility, ensuring we don't divide by zero
+            double avgCompat = (pairCount > 0) ? totalCompat / pairCount : 0.5;
+            groupScores.put(group.getId(), avgCompat);
+        }
+
+        return groupScores;
     }
 }

@@ -5,7 +5,6 @@ import com.example.atoolformanagingstudentsoftwareprojects.model.Project;
 import com.example.atoolformanagingstudentsoftwareprojects.model.StudentDetails;
 import com.example.atoolformanagingstudentsoftwareprojects.model.StudentPreferences;
 import com.example.atoolformanagingstudentsoftwareprojects.model.User;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
 import com.example.atoolformanagingstudentsoftwareprojects.service.ProjectService;
@@ -34,6 +33,9 @@ public class StudentController {
 
     @Autowired
     private StudentDetailsRepository studentDetailsRepository;
+
+    @Autowired
+    private ProjectService projectService;
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
@@ -91,6 +93,19 @@ public class StudentController {
         studentPreferencesService.savePreferences(preferences, currentUser.getUser());
         return "redirect:/student/preferences";
     }
+
+    @GetMapping("/student/projects")
+    public String viewStudentProjects(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+        User user = currentUser.getUser();
+        List<Project> studentProjects = projectService.getProjectsForStudent(user);
+
+        model.addAttribute("projects", studentProjects);
+        model.addAttribute("firstName", user.getFirstName());
+        model.addAttribute("username", user.getUsername());
+
+        return "student/viewProjects";
+    }
+
 
 
 

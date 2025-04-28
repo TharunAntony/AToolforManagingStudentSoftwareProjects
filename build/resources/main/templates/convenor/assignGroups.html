@@ -47,6 +47,9 @@
             <ul th:if="${!#lists.isEmpty(groups)}">
                 <li th:each="group : ${groups}">
                     <span th:text="'Group ' + ${group.id}"></span>
+                    <span th:if="${groupScores != null}" style="margin-left: 10px; font-size: 0.9em; color: #555;">
+                    (Score: <span th:text="${#numbers.formatDecimal(groupScores[group.id], 1, 2)}">0.00</span>)
+                </span>
                 </li>
             </ul>
         </div>

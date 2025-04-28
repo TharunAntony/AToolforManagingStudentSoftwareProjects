@@ -50,7 +50,8 @@
                     <p>No available students to add.</p>
                 </div>
                 <div th:if="${!#lists.isEmpty(availableStudents)}">
-                    <ul>
+                    <button type="button" class="btn select-all-btn" onclick="toggleSelectAllAvailableStudents()">Select All</button>
+                    <ul id="available-students-list">
                         <li th:each="student : ${availableStudents}">
                             <label>
                                 <input type="checkbox" name="studentIds" th:value="${student.id}">
@@ -60,7 +61,8 @@
                     </ul>
                 </div>
             </div>
-            <!--Error messages for when convenor tries to add or remove student without selecting one -->
+
+            <!-- Error Messages -->
             <div class="flash-messages">
                 <div th:if="${error}" class="error-message">
                     <p th:text="${error}"></p>
@@ -70,18 +72,25 @@
                 </div>
             </div>
 
-
             <button type="submit" class="btn add-btn">Add Selected Students</button>
-
-
         </form>
     </div>
 
     <form th:action="@{|/convenor/project/${project.id}/assignGroups|}">
         <button type="submit" class="btn groups-btn">Assign students into Groups</button>
     </form>
- 
+
 </div>
+
+<script>
+    function toggleSelectAllAvailableStudents() {
+        const checkboxes = document.querySelectorAll('#available-students-list input[type="checkbox"]');
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+        checkboxes.forEach(cb => cb.checked = !allChecked);
+    }
+</script>
+
 
 </body>
 </html>

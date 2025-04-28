@@ -3,6 +3,7 @@ package com.example.atoolformanagingstudentsoftwareprojects.service;
 import com.example.atoolformanagingstudentsoftwareprojects.dto.ProjectForm;
 import com.example.atoolformanagingstudentsoftwareprojects.model.*;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
+import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +22,9 @@ public class ProjectService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private StudentDetailsRepository studentDetailsRepository;
 
     public void saveProject(ProjectForm form,@AuthenticationPrincipal CurrentUser currentUser) {
         Project project = new Project();
@@ -101,6 +105,11 @@ public class ProjectService {
     public List<Groups> getGroupsForProject(Project project) {
         return project.getGroups();
     }
+
+    public List<Project> getProjectsForStudent(User user) {
+        return user.getStudentDetails().getProjects();
+    }
+
 
 
 

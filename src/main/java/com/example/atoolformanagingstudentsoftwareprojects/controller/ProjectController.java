@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/convenor")
@@ -136,6 +137,9 @@ public class ProjectController {
         model.addAttribute("assignedStudents", assignedStudents);
         model.addAttribute("groups", groups);
 
+        //Group compatibility scores
+        Map<Long, Double> groupScores = groupService.evaluateGroupCompatibility(groups);
+        model.addAttribute("groupScores", groupScores);
         return "convenor/assignGroups";
     }
 

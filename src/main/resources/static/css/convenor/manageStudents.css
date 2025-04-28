@@ -88,3 +88,19 @@ button.groups-btn {
 button.groups-btn:hover {
     background-color: #002147;
 }
+
+.select-all-btn {
+    background-color: #0055a5;
+    color: white;
+    margin-bottom: 10px;
+    padding: 8px 16px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.select-all-btn:hover {
+    background-color: #003f7d;
+}
+
