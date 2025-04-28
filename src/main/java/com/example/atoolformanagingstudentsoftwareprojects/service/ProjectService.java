@@ -97,4 +97,11 @@ public class ProjectService {
         return form;
     }
 
+    //Gets groups for a project
+    public List<Groups> getGroupsForProject(Project project) {
+        return project.getGroups();
+    }
+
+
+
 }

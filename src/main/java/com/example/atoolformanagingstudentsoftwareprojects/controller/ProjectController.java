@@ -4,10 +4,12 @@ import com.example.atoolformanagingstudentsoftwareprojects.dto.ProjectForm;
 import com.example.atoolformanagingstudentsoftwareprojects.model.Project;
 import com.example.atoolformanagingstudentsoftwareprojects.model.User;
 import com.example.atoolformanagingstudentsoftwareprojects.model.StudentDetails;
+import com.example.atoolformanagingstudentsoftwareprojects.model.Groups;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
 import com.example.atoolformanagingstudentsoftwareprojects.service.CustomUserDetailsService;
+import com.example.atoolformanagingstudentsoftwareprojects.service.GroupService;
 import com.example.atoolformanagingstudentsoftwareprojects.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +31,8 @@ public class ProjectController {
     private StudentDetailsRepository studentDetailsRepository;
     @Autowired
     private CustomUserDetailsService userService;
+    @Autowired
+    private GroupService groupService;
 
     @GetMapping("/create-project")
     public String showCreateProjectForm(Model model) {
@@ -121,6 +125,30 @@ public class ProjectController {
         return "redirect:/convenor/project/{projectId}/manageStudents";
     }
 
+
+    @GetMapping("/project/{projectId}/assignGroups")
+    public String showAssignGroupsPage(@PathVariable Long projectId, Model model) {
+        Project project = projectService.getProjectById(projectId);
+        List<User> assignedStudents = projectService.getStudentsAssignedToProject(project);
+        List<Groups> groups = projectService.getGroupsForProject(project);
+
+        model.addAttribute("project", project);
+        model.addAttribute("assignedStudents", assignedStudents);
+        model.addAttribute("groups", groups);
+
+        return "convenor/assignGroups";
+    }
+
+    @PostMapping("/project/{projectId}/assignGroups/autoAllocate")
+    public String autoAllocateGroups(@PathVariable Long projectId, RedirectAttributes redirectAttributes) {
+        try {
+            groupService.autoAllocateGroups(projectId);
+            redirectAttributes.addFlashAttribute("success", "Groups allocated successfully.");
+        } catch (Exception exception) {
+            redirectAttributes.addFlashAttribute("error", "Failed to allocate groups.");
+        }
+        return "redirect:/convenor/project/" + projectId + "/assignGroups";
+    }
 
 
 

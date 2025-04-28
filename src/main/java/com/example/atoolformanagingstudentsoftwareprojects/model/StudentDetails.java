@@ -81,4 +81,12 @@ public class StudentDetails {
     public void setProjects(List<Project> projects) {
         this.projects = projects;
     }
+
+    public StudentPreferences getStudentPreferences() {
+        return studentPreferences;
+    }
+
+    public void setStudentPreferences(StudentPreferences studentPreferences) {
+        this.studentPreferences = studentPreferences;
+    }
 }

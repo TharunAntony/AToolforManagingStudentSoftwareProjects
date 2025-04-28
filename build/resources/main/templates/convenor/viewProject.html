@@ -20,6 +20,7 @@
             <span th:text="${#temporals.format(project.deadline, 'dd MMM yyyy, HH:mm')}">Deadline</span>
             <span th:if="${project.deadline.isBefore(T(java.time.LocalDateTime).now())}" style="color: red;">(Past Due)</span>
         </p>
+        <p><strong>Group Capacity: </strong><span th:text="${project.groupCapacity}">Group Capacity</span></p>
     </section>
 
     <hr/>

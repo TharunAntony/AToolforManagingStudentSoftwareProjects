@@ -17,32 +17,41 @@
 
     <div class="section">
 
-        <h2>Working Style</h2>
-        <p th:text="${preferences.workingStyle == 1 ? 'Independent' : preferences.workingStyle == 2 ? 'Collaborative' : 'Flexible'}">-</p>
+        <th:block th:if="${preferences != null}">
+            <h2>Working Style</h2>
+            <p th:text="${preferences.workingStyle} == 1 ? 'Independent' : (${preferences.workingStyle} == 2 ? 'Collaborative' : 'Flexible')">
+                -</p>
 
-        <h2>Preferred Working Hours</h2>
-        <p th:text="${preferences.workingHours == 1 ? 'Morning' : preferences.workingHours == 2 ? 'Afternoon' : preferences.workingHours == 3 ? 'Evening' : 'No Preference'}">-</p>
+            <h2>Preferred Working Hours</h2>
+            <p th:text="${preferences.workingHours == 1 ? 'Morning' : preferences.workingHours == 2 ? 'Afternoon' : preferences.workingHours == 3 ? 'Evening' : 'No Preference'}">
+                -</p>
 
-        <h2>Technical Skills Confidence</h2>
-        <input type="range" min="1" max="5" th:value="${preferences.technicalSkill}" disabled>
-        <p>Selected: <span th:text="${preferences.technicalSkill}">-</span>/5</p>
+            <h2>Technical Skills Confidence</h2>
+            <input type="range" min="1" max="5" th:value="${preferences.technicalSkill}" disabled>
+            <p>Selected: <span th:text="${preferences.technicalSkill}">-</span>/5</p>
 
-        <h2>Communication Skills Confidence</h2>
-        <input type="range" min="1" max="5" th:value="${preferences.communicationSkill}" disabled>
-        <p>Selected: <span th:text="${preferences.communicationSkill}">-</span>/5</p>
+            <h2>Communication Skills Confidence</h2>
+            <input type="range" min="1" max="5" th:value="${preferences.communicationSkill}" disabled>
+            <p>Selected: <span th:text="${preferences.communicationSkill}">-</span>/5</p>
 
-        <h2>Leadership Preference</h2>
-        <p th:text="${preferences.leadershipPreference == 1 ? 'Prefer to lead' : preferences.leadershipPreference == 2 ? 'Prefer to support' : 'No Preference'}">-</p>
+            <h2>Leadership Preference</h2>
+            <p th:text="${preferences.leadershipPreference == 1 ? 'Prefer to lead' : preferences.leadershipPreference == 2 ? 'Prefer to support' : 'No Preference'}">
+                -</p>
 
-        <h2>Deadline Approach</h2>
-        <p th:text="${preferences.deadlineApproach == 1 ? 'Finish Early' : 'Finish Close to Deadline'}">-</p>
+            <h2>Deadline Approach</h2>
+            <p th:text="${preferences.deadlineApproach == 1 ? 'Finish Early' : 'Finish Close to Deadline'}">-</p>
 
-        <h2>Teamwork Experience</h2>
-        <input type="range" min="1" max="5" th:value="${preferences.teamworkExperience}" disabled>
-        <p>Selected: <span th:text="${preferences.teamworkExperience}">-</span>/5</p>
+            <h2>Teamwork Experience</h2>
+            <input type="range" min="1" max="5" th:value="${preferences.teamworkExperience}" disabled>
+            <p>Selected: <span th:text="${preferences.teamworkExperience}">-</span>/5</p>
 
-        <h2>Prior Experience with Project Type</h2>
-        <p th:text="${preferences.priorExperience ? 'Yes' : 'No'}">-</p>
+            <h2>Prior Experience with Project Type</h2>
+            <p th:text="${preferences.priorExperience ? 'Yes' : 'No'}">-</p>
+        </th:block>
+
+        <th:block th:unless="${preferences != null}">
+            <p>You have not set your preferences yet.</p>
+        </th:block>
 
     </div>
 

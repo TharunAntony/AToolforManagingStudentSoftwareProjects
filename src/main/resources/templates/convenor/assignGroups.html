@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Assign Groups</title>
+    <link rel="stylesheet" href="/css/convenor/assignGroups.css">
+    <link rel="stylesheet" href="/css/convenor/navbar.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+    <h1 th:text="'Assign Groups for: ' + ${project.title}">Assign Groups</h1>
+
+    <!-- Flash Messages -->
+    <div class="flash-messages">
+        <div th:if="${error}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
+        <div th:if="${success}" class="success-message">
+            <p th:text="${success}"></p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Students in Project</h2>
+        <div class="list-box scroll-box">
+            <div th:if="${#lists.isEmpty(assignedStudents)}">
+                <p>No students have been assigned yet.</p>
+            </div>
+            <ul th:if="${!#lists.isEmpty(assignedStudents)}">
+                <li th:each="student : ${assignedStudents}">
+                    <span th:text="${student.firstName + ' ' + student.lastName}">Student Name</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Groups</h2>
+        <div class="list-box scroll-box">
+            <div th:if="${#lists.isEmpty(groups)}">
+                <p>No groups have been created yet.</p>
+            </div>
+            <ul th:if="${!#lists.isEmpty(groups)}">
+                <li th:each="group : ${groups}">
+                    <span th:text="'Group ' + ${group.id}"></span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <form th:action="@{|/convenor/project/${project.id}/assignGroups/autoAllocate|}" method="post">
+        <button type="submit" class="groups-btn">Auto Allocate Groups</button>
+    </form>
+
+</div>
+
+</body>
+</html>
