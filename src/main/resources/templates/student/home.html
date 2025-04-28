@@ -16,11 +16,14 @@
     <h1>Welcome, <span th:text="${firstName}"></span>!</h1>
 
     <h2>Current Projects:</h2>
-    <ul>
-        <li th:each="project : ${projects}">
-            <span th:text="${project.title}"></span>
-        </li>
-    </ul>
+
+    <div class="projects-list">
+        <a th:each="project : ${projects}" th:href="@{|/student/project/${project.id}|}" class="project-card">
+            <div class="project-title" th:text="${project.title}">Project Title</div>
+            <div class="project-description" th:text="${project.description}">Short project description...</div>
+        </a>
+    </div>
+
 </div>
 
 </body>

@@ -45,7 +45,7 @@ h1{
 .details-btn, .manage-btn {
     padding: 8px 16px;
     margin: 4px;
-    background-color: #c8102e;
+    background-color: #00074a;
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -53,5 +53,5 @@ h1{
 }
 
 .details-btn:hover, .manage-btn:hover {
-    background-color: #a50f26;
+    background-color: #0010ba;
 }

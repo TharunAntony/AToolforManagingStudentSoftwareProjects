@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>View My Projects</title>
+    <link rel="stylesheet" href="/css/student/projects.css">
+    <link rel="stylesheet" href="/css/student/navBar.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/studentNavBar :: navbar"></div>
+
+<div class="container">
+    <h1>My Projects</h1>
+
+    <div class="projects-section">
+        <div th:if="${#lists.isEmpty(projects)}">
+            <p>You are not assigned to any projects yet.</p>
+        </div>
+        <div th:if="${!#lists.isEmpty(projects)}" class="project-grid">
+            <div th:each="project : ${projects}" class="project-card">
+                <h2 th:text="${project.title}">Project Title</h2>
+                <p th:text="${project.description}">Project description goes here...</p>
+                <a th:href="@{|/student/project/${project.id}|}" class="btn view-btn">View Details</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

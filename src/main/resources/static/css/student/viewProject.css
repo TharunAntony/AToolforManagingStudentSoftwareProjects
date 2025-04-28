@@ -1,0 +1,72 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    padding: 30px;
+}
+
+h1 {
+    color: #002147;
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.project-details {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.project-details p {
+    font-size: 15px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.group-section {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2, h3 {
+    color: #004080;
+    margin-top: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 8px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Flash message styling if needed later */
+.flash-messages {
+    margin-top: 15px;
+}
+
+.error-message {
+    background-color: #ffc0c0;
+    padding: 10px;
+    border-radius: 6px;
+    color: #900;
+}
+
+.success-message {
+    background-color: #c0ffc0;
+    padding: 10px;
+    border-radius: 6px;
+    color: #060;
+}

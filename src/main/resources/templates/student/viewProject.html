@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Details</title>
+    <link rel="stylesheet" href="/css/student/viewProject.css">
+    <link rel="stylesheet" href="/css/student/navBar.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/studentNavBar :: navbar"></div>
+
+<div class="container">
+    <h1 th:text="${project.title}">Project Title</h1>
+
+    <div class="project-details">
+        <p><strong>Description:</strong></p>
+        <p th:text="${project.description}">Project description goes here...</p>
+
+        <p><strong>Deadline:</strong>
+            <span th:text="${#temporals.format(project.deadline, 'dd/MM/yyyy HH:mm')}">Deadline</span>
+        </p>
+    </div>
+
+    <div class="group-section">
+        <h2>Your Group</h2>
+
+        <div th:if="${group != null}">
+            <p><strong>Group Name:</strong> <span th:text="${group.groupName}">Group Name</span></p>
+
+            <h3>Group Members:</h3>
+            <ul>
+                <li th:each="member : ${groupMembers}">
+                    <span th:text="${member.student.student.firstName + ' ' + member.student.student.lastName}">Member Name</span>
+                </li>
+            </ul>
+        </div>
+
+        <div th:if="${group == null}">
+            <p>You are not assigned to any group yet.</p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

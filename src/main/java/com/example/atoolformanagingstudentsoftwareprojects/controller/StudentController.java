@@ -1,10 +1,8 @@
 package com.example.atoolformanagingstudentsoftwareprojects.controller;
 
 import com.example.atoolformanagingstudentsoftwareprojects.dto.StudentPreferencesForm;
-import com.example.atoolformanagingstudentsoftwareprojects.model.Project;
-import com.example.atoolformanagingstudentsoftwareprojects.model.StudentDetails;
-import com.example.atoolformanagingstudentsoftwareprojects.model.StudentPreferences;
-import com.example.atoolformanagingstudentsoftwareprojects.model.User;
+import com.example.atoolformanagingstudentsoftwareprojects.model.*;
+import com.example.atoolformanagingstudentsoftwareprojects.repository.GroupMemberRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
 import com.example.atoolformanagingstudentsoftwareprojects.service.ProjectService;
@@ -14,11 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -36,6 +33,9 @@ public class StudentController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private GroupMemberRepository groupMemberRepository;
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
@@ -94,19 +94,48 @@ public class StudentController {
         return "redirect:/student/preferences";
     }
 
-    @GetMapping("/student/projects")
+    @GetMapping("/projects")
     public String viewStudentProjects(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         User user = currentUser.getUser();
-        List<Project> studentProjects = projectService.getProjectsForStudent(user);
+        List<Project> studentProjects = studentService.getStudentProjects(user);
 
         model.addAttribute("projects", studentProjects);
         model.addAttribute("firstName", user.getFirstName());
         model.addAttribute("username", user.getUsername());
 
-        return "student/viewProjects";
+        return "student/projects";
     }
 
+    @GetMapping("/project/{projectId}")
+    public String viewStudentProject(@PathVariable Long projectId, @AuthenticationPrincipal CurrentUser currentUser, Model model) {
+        User user = currentUser.getUser();
 
+        Project project = projectService.getProjectById(projectId);
+
+        // Find all group memberships for this student
+        List<GroupMember> memberships = groupMemberRepository.findByStudent(user.getStudentDetails());
+
+        Groups studentGroup = null;
+
+        // Check if the student is assigned to a group for this project
+        for (GroupMember gm : memberships) {
+            if (gm.getGroup() != null && gm.getGroup().getProject().getId().equals(project.getId())) {
+                studentGroup = gm.getGroup();
+                break;
+            }
+        }
+
+        List<GroupMember> groupMembers = new ArrayList<>();
+        if (studentGroup != null) {
+            groupMembers = groupMemberRepository.findByGroup(studentGroup);
+        }
+
+        model.addAttribute("project", project);
+        model.addAttribute("group", studentGroup);
+        model.addAttribute("groupMembers", groupMembers);
+
+        return "student/viewProject";
+    }
 
 
 }
