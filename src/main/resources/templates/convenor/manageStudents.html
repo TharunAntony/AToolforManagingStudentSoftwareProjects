@@ -1,0 +1,87 @@
+<!-- templates/convenor/manageStudents.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Students</title>
+    <link rel="stylesheet" href="/css/convenor/manageStudents.css">
+    <link rel="stylesheet" href="/css/convenor/navbar.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+    <h1 th:text="'Manage Students for: ' + ${project.title}">Manage Students</h1>
+
+    <div class="section">
+        <h2>Students Assigned to This Project</h2>
+
+        <form th:action="@{|/convenor/project/${project.id}/manageStudents/remove|}" method="post">
+            <div class="list-box">
+                <div th:if="${#lists.isEmpty(assignedStudents)}">
+                    <p>No students have been assigned yet.</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(assignedStudents)}">
+                    <ul>
+                        <li th:each="student : ${assignedStudents}">
+                            <label>
+                                <input type="checkbox" name="studentIds" th:value="${student.id}">
+                                <span th:text="${student.firstName + ' ' + student.lastName}">Student Name</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <button type="submit" class="btn remove-btn">Remove Selected Students</button>
+        </form>
+    </div>
+
+    <hr>
+
+    <div class="section">
+        <h2>Available Students to Add</h2>
+
+        <form th:action="@{|/convenor/project/${project.id}/manageStudents/add|}" method="post">
+            <div class="list-box">
+                <div th:if="${#lists.isEmpty(availableStudents)}">
+                    <p>No available students to add.</p>
+                </div>
+                <div th:if="${!#lists.isEmpty(availableStudents)}">
+                    <ul>
+                        <li th:each="student : ${availableStudents}">
+                            <label>
+                                <input type="checkbox" name="studentIds" th:value="${student.id}">
+                                <span th:text="${student.firstName + ' ' + student.lastName}">Student Name</span>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--Error messages for when convenor tries to add or remove student without selecting one -->
+            <div class="flash-messages">
+                <div th:if="${error}" class="error-message">
+                    <p th:text="${error}"></p>
+                </div>
+                <div th:if="${success}" class="success-message">
+                    <p th:text="${success}"></p>
+                </div>
+            </div>
+
+
+            <button type="submit" class="btn add-btn">Add Selected Students</button>
+
+
+        </form>
+    </div>
+
+    <form th:action="@{|/convenor/project/${project.id}/assignGroups|}" method="post">
+        <button type="submit" class="btn groups-btn">Assign students into Groups</button>
+    </form>
+
+</div>
+
+</body>
+</html>

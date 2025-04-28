@@ -1,9 +1,7 @@
 package com.example.atoolformanagingstudentsoftwareprojects.service;
 
 import com.example.atoolformanagingstudentsoftwareprojects.dto.ProjectForm;
-import com.example.atoolformanagingstudentsoftwareprojects.model.ConvenorDetails;
-import com.example.atoolformanagingstudentsoftwareprojects.model.Project;
-import com.example.atoolformanagingstudentsoftwareprojects.model.User;
+import com.example.atoolformanagingstudentsoftwareprojects.model.*;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +45,56 @@ public class ProjectService {
     public Project getProjectById(Long id) {
         return projectRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid project ID: " + id));
+    }
+
+    // Get the list of students assigned to the project
+    public List<User> getStudentsAssignedToProject(Project project) {
+        List<User> users = new java.util.ArrayList<>();
+        for (StudentDetails details : project.getStudents()) {
+            users.add(details.getStudent());
+        }
+        return users;
+    }
+
+    // Get the students available to be added to the project (students not already in it)
+    public List<User> getAvailableStudentsForProject(Project project) {
+        List<User> allStudents = userRepository.findByRole(Role.STUDENT);
+        List<User> assignedStudents = getStudentsAssignedToProject(project);
+
+        List<User> availableStudents = new java.util.ArrayList<>();
+        for (User student : allStudents) {
+            if (!assignedStudents.contains(student)) {
+                availableStudents.add(student);
+            }
+        }
+        return availableStudents;
+    }
+
+    public void updateProject(Project updatedProject) {
+        //Fetch the existing project from the database using its ID
+        Project existingProject = projectRepository.findById(updatedProject.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid project ID: " + updatedProject.getId()));
+
+        //Update fields with the new data
+        existingProject.setTitle(updatedProject.getTitle());
+        existingProject.setDescription(updatedProject.getDescription());
+        existingProject.setDeadline(updatedProject.getDeadline());
+        existingProject.setGroupCapacity(updatedProject.getGroupCapacity());
+        existingProject.setConvenor(updatedProject.getConvenor());
+        existingProject.setStudents(updatedProject.getStudents()); // Update student list if needed
+
+        //Save the updated project
+        projectRepository.save(existingProject);
+    }
+
+
+    public ProjectForm convertToForm(Project project) {
+        ProjectForm form = new ProjectForm();
+        form.setTitle(project.getTitle());
+        form.setDescription(project.getDescription());
+        form.setDeadline(project.getDeadline().toString());
+        form.setGroupCapacity(project.getGroupCapacity());
+        return form;
     }
 
 }
