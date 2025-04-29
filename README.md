@@ -62,7 +62,7 @@ Open the project as a Gradle project.
 Make sure the correct Java SDK (Java 17) is set.
 Run the AToolforManagingStudentSoftwareProjectsApplication.java file (it contains the main method) directly.
 
-The application should start and be available at http://localhost:8080 
+The application should start and be available at http://localhost:8080/home . If you try to access any other page instead of the default homepage you will be re-directed to login which is still fine as you can carry on from there.
 
 # Operating System Requirements
 
