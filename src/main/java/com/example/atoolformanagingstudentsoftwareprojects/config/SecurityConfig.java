@@ -24,6 +24,8 @@ public class SecurityConfig{
                 .authorizeHttpRequests((requests) -> requests
                         //allow login page and static files
                         .requestMatchers("/home","/login","/register", "/images/**", "/css/**").permitAll()
+                        .requestMatchers("/convenor/**").hasRole("CONVENOR")
+                        .requestMatchers("/student/**").hasRole("STUDENT")
                         //everything else requires login
                         .anyRequest().authenticated()
                 )
@@ -36,7 +38,19 @@ public class SecurityConfig{
 
                 )
                 .logout((logout) -> logout
-                        .logoutSuccessUrl("/login?logout").permitAll()
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                )
+                .exceptionHandling((exceptions) -> exceptions
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            if (request.isUserInRole("CONVENOR")) {
+                                response.sendRedirect("/convenor/home?error=accessDenied");
+                            } else if (request.isUserInRole("STUDENT")) {
+                                response.sendRedirect("/student/home?error=accessDenied");
+                            } else {
+                                response.sendRedirect("/login?error=accessDenied");
+                            }
+                        })
                 )
                 .csrf(AbstractHttpConfigurer::disable);
 

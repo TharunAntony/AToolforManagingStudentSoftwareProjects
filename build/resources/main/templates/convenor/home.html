@@ -8,8 +8,15 @@
 </head>
 <body>
 
-<!-- Navbar -->
+<!-- Navigation Bar -->
 <div th:replace="fragments/navbar :: navbar"></div>
+
+
+<div class="flash-messages">
+    <div th:if="${param.error}" class="error-message">
+        <p th:text="${param.error == 'accessDenied' ? 'Access denied. You are not permitted to view that page.' : ''}"></p>
+    </div>
+</div>
 
 <div class="container content">
     <h1>Welcome, <span th:text="${firstName}"></span>!</h1>

@@ -5,6 +5,10 @@ body {
     padding: 0;
 }
 
+.error-message{
+    color: #990000;
+}
+
 .content {
     padding: 30px;
 }

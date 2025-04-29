@@ -4,7 +4,9 @@ body {
     margin: 0;
     padding: 0;
 }
-
+.error-message{
+    color: #990000;
+}
 .container {
     padding: 30px;
 }

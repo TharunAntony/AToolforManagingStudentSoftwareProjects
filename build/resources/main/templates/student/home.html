@@ -11,6 +11,11 @@
 <!-- Navigation bar -->
 <div th:replace="fragments/studentNavbar :: navbar"></div>
 
+<div th:if="${param.error != null and param.error[0] == 'accessDenied'}" class="error-message">
+    <b>Access denied. You are not permitted to view that page.</b>
+</div>
+
+
 <!-- Main home page -->
 <div class="content">
     <h1>Welcome, <span th:text="${firstName}"></span>!</h1>
@@ -23,6 +28,7 @@
             <div class="project-description" th:text="${project.description}">Short project description...</div>
         </a>
     </div>
+
 
 </div>
 
