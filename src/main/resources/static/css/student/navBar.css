@@ -1,4 +1,3 @@
-/* Main navbar */
 .navbar {
     background-color: #343434;
     color: white;
@@ -9,7 +8,6 @@
     font-family: Arial, sans-serif;
 }
 
-/* Links on left side */
 .navbar a {
     color: white;
     text-decoration: none;
@@ -18,25 +16,23 @@
     font-size: 16px;
 }
 
-/* Hover effect for all links */
 .navbar a:hover {
     text-decoration: underline;
 }
 
-/* Left container */
+
 .navbar-left {
     display: flex;
     align-items: center;
 }
 
-/* Right container */
+
 .navbar-right {
     display: flex;
     align-items: center;
 }
 
 
-/* Buttons and styled links */
 .navbar button, .navbar-right a.logout-btn, .navbar-right a.account-btn {
     background-color: #343434;
     color: white;
@@ -49,7 +45,6 @@
     margin-right: 5px;
 }
 
-/* Hover effects */
 .navbar button:hover,
 .navbar-right a.logout-btn:hover {
     background-color: #a50f26;
@@ -59,7 +54,6 @@
     background-color: #8c8c8c;
 }
 
-/* Form for logout should be inline */
 .inline-form {
     display: inline;
     margin: 0;

@@ -27,7 +27,7 @@
             <td th:text="${#temporals.format(project.deadline, 'dd-MM-yyyy HH:mm')}"></td>
             <td class="action-buttons">
                 <a th:href="@{'/convenor/project/' + ${project.id}}" class="details-btn">View Details</a>
-                <a th:href="@{'/convenor/project/' + ${project.id} + '/manageStudents'}" class="manage-btn">Manage Project</a>
+                <a th:href="@{'/convenor/project/' + ${project.id} + '/editProject'}" class="manage-btn">Edit Project</a>
             </td>
         </tr>
         </tbody>

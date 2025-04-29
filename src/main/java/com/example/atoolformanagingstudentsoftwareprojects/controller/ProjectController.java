@@ -1,10 +1,7 @@
 package com.example.atoolformanagingstudentsoftwareprojects.controller;
 
 import com.example.atoolformanagingstudentsoftwareprojects.dto.ProjectForm;
-import com.example.atoolformanagingstudentsoftwareprojects.model.Project;
-import com.example.atoolformanagingstudentsoftwareprojects.model.User;
-import com.example.atoolformanagingstudentsoftwareprojects.model.StudentDetails;
-import com.example.atoolformanagingstudentsoftwareprojects.model.Groups;
+import com.example.atoolformanagingstudentsoftwareprojects.model.*;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
@@ -18,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -66,14 +65,50 @@ public class ProjectController {
         Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
         model.addAttribute("project", project);
-
-        //Add groups and students to the model if needed
         model.addAttribute("groups", project.getGroups());
         model.addAttribute("students", project.getStudents());
 
         return "convenor/viewProject";
     }
 
+    @GetMapping("/project/{id}/editProject")
+    public String editProjectForm(@PathVariable Long id, Model model) {
+        Project project  = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+        model.addAttribute("projectForm", new ProjectForm());
+        model.addAttribute("project", project);
+        return "convenor/editProject";
+    }
+
+    @PostMapping("/project/{id}/editProject")
+    public String editProject(@ModelAttribute ProjectForm form, @PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
+        Project project = new Project();
+        project.setId(id);
+        project.setTitle(form.getTitle());
+        project.setDescription(form.getDescription());
+        project.setGroupCapacity(form.getGroupCapacity());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime deadline = LocalDateTime.parse(form.getDeadline(), formatter);
+        project.setDeadline(deadline);
+
+        ConvenorDetails convenorDetails = currentUser.getUser().getConvenorDetails();
+        project.setConvenor(convenorDetails);
+
+        projectService.updateProject(project);
+
+        return "redirect:/convenor/projects";
+    }
+
+    @GetMapping("/listAssignStudents")
+    public String showAssignStudents(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+        User user = currentUser.getUser();
+        List<Project> projects = projectRepository.findByConvenor(user.getConvenorDetails());
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("firstName", user.getFirstName());
+        model.addAttribute("projects", projects);
+
+        return "convenor/listAssignStudents";
+    }
 
     @GetMapping("/project/{projectId}/manageStudents")
     public String manageStudents(@PathVariable Long projectId, Model model) {
@@ -115,7 +150,7 @@ public class ProjectController {
     @PostMapping("/project/{projectId}/manageStudents/remove")
     public String removeStudentsFromProject(@PathVariable Long projectId, @RequestParam(value = "studentIds", required = false) List<Long> studentIds, RedirectAttributes redirectAttributes) {
         if (studentIds == null || studentIds.isEmpty()) {
-            redirectAttributes.addFlashAttribute("error", "Please select at least one student to add.");
+            redirectAttributes.addFlashAttribute("error", "Please select at least one student to remove.");
             return "redirect:/convenor/project/{projectId}/manageStudents";
         }
         Project project = projectService.getProjectById(projectId);

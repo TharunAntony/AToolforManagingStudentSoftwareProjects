@@ -12,11 +12,10 @@
 <div th:replace="fragments/navbar :: navbar"></div>
 
 <div class="container content">
-    <h1>Welcome, <span th:text="${firstName}"></span>!</h1>
-    <h2>My Managed Projects:</h2>
+    <h1>Choose the project you want to assign Students to:</h1>
 
     <div class="projects-list">
-        <a th:each="project : ${projects}" th:href="@{|/convenor/project/${project.id}|}" class="project-card">
+        <a th:each="project : ${projects}" th:href="@{|/convenor/project/${project.id}/manageStudents|}" class="project-card">
             <div class="project-title" th:text="${project.Title}">Project Title</div>
             <div class="project-description" th:text="${project.Description}">Short description...</div>
         </a>

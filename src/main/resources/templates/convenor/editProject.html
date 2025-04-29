@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Project</title>
+    <link rel="stylesheet" href="/css/convenor/CreateProject.css">
+    <link rel="stylesheet" href="/css/convenor/navbar.css">
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+<div class="form-container">
+    <h2>Edit your Project</h2>
+    <form th:action="@{|/convenor/project/${project.id}/editProject|}" th:object="${projectForm}" method="post">
+
+        <label>Project Title:</label><br>
+        <input type="text" th:field="*{title}" required/><br><br>
+
+        <label>Project Description:</label><br>
+        <textarea th:field="*{description}" rows="4" required></textarea><br><br>
+
+        <label>Deadline (Choose Date & Time):</label><br>
+        <input type="datetime-local" th:field="*{deadline}" required/><br><br>
+
+        <label>Group Capacity:</label><br>
+        <input type="number" th:field="*{groupCapacity}" min="1" required/><br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+
+</body>
+</html>
