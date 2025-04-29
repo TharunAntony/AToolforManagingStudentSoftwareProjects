@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+    background: url('../images/UOLbackground.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 30px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    max-width: 850px;
+    width: 100%;
+}
+
+.header .logo {
+    height: 60px;
+    margin-right: 20px;
+    opacity: 0.9;
+}
+
+.header h1 {
+    font-size: 26px;
+    color: #333;
+    margin: 0;
+}
+
+.home-container {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px 50px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 20px rgba(0,0,0,0.1);
+    width: 400px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 15px;
+    font-size: 28px;
+    color: #002147;
+}
+
+.welcome-text {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.home-button {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #4285f4;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.home-button:hover {
+    background-color: #357ae8;
+}
+
+.register-link {
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #4285f4;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}

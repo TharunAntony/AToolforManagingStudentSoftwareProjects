@@ -1,8 +1,26 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - Student Software Project Management System</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
 
-<html xmlns:th="http://www.thymeleaf.org">
-<HEAD>
-    <title>Hello World</title>
-</HEAD>
-<h2>Hello World</h2>
+<div class="header">
+    <img src="/images/University_of_Leicester_logo_pillars.jpg" alt="University of Leicester Logo" class="logo">
+    <h1>Student Software Project Management System</h1>
+</div>
+
+<div class="home-container">
+    <h2>Welcome!</h2>
+    <p class="welcome-text">Welcome to the Student Software Project Management System.</p>
+    <p class="welcome-text">Please log in to get started!</p>
+
+    <a th:href="@{/login}" class="home-button">Login Now ➔</a>
+
+    <p class="register-link">New user? <a href="/register">Register here</a></p>
+</div>
+
+</body>
 </html>

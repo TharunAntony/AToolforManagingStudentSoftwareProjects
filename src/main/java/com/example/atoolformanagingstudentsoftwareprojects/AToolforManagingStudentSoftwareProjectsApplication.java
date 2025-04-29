@@ -57,8 +57,8 @@ class DataInitializer implements CommandLineRunner {
 
     public void testDataLoader(){
 
-        /*Create 20 test students
-        for (int i = 1; i <= 20; i++) {
+        /* //Create 30 test students
+        for (int i = 1; i <= 30; i++) {
             User user = new User();
             user.setUsername("student" + i);
             user.setFirstName("Student" + i);
@@ -87,9 +87,27 @@ class DataInitializer implements CommandLineRunner {
             preferences.setPriorExperience(new Random().nextBoolean());
 
             studentPreferencesRepository.save(preferences);
-        }
+        }*/
 
-        System.out.println("Test students generated successfully.");*/
+        /* //Creates 20 test students without preferences (recommended to uncomment after using the testing the system with the students who do have preference)
+        for (int i = 31; i <= 50; i++) {
+            User user = new User();
+            user.setUsername("student" + i);
+            user.setFirstName("Student" + i);
+            user.setLastName("Test");
+            user.setEmail("student" + i + "@example.com");
+            user.setPassword(passwordEncoder.encode("password")); // default password
+            user.setRole(Role.STUDENT);
+
+            user = userRepository.save(user);
+
+            StudentDetails details = new StudentDetails();
+            details.setStudent(user);
+
+            details = studentDetailsRepository.save(details);
+        }*/
+
+        //System.out.println("Test students generated successfully.");
     }
 
     private int randomInt(int min, int max) {

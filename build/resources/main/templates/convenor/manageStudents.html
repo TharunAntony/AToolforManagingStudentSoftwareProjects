@@ -24,7 +24,8 @@
                     <p>No students have been assigned yet.</p>
                 </div>
                 <div th:if="${!#lists.isEmpty(assignedStudents)}">
-                    <ul>
+                    <button type="button" class="btn select-all-btn" onclick="toggleSelectAssignedeStudents()">Select All</button>
+                    <ul id="assignedStudents">
                         <li th:each="student : ${assignedStudents}">
                             <label>
                                 <input type="checkbox" name="studentIds" th:value="${student.id}">
@@ -51,7 +52,7 @@
                 </div>
                 <div th:if="${!#lists.isEmpty(availableStudents)}">
                     <button type="button" class="btn select-all-btn" onclick="toggleSelectAllAvailableStudents()">Select All</button>
-                    <ul id="available-students-list">
+                    <ul id="availableStudents">
                         <li th:each="student : ${availableStudents}">
                             <label>
                                 <input type="checkbox" name="studentIds" th:value="${student.id}">
@@ -84,7 +85,14 @@
 
 <script>
     function toggleSelectAllAvailableStudents() {
-        const checkboxes = document.querySelectorAll('#available-students-list input[type="checkbox"]');
+        const checkboxes = document.querySelectorAll('#availableStudents input[type="checkbox"]');
+        const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+        checkboxes.forEach(cb => cb.checked = !allChecked);
+    }
+
+    function toggleSelectAssignedeStudents() {
+        const checkboxes = document.querySelectorAll('#assignedStudents input[type="checkbox"]');
         const allChecked = Array.from(checkboxes).every(cb => cb.checked);
 
         checkboxes.forEach(cb => cb.checked = !allChecked);

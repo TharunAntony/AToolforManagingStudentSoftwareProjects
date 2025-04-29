@@ -23,7 +23,7 @@ public class SecurityConfig{
         http
                 .authorizeHttpRequests((requests) -> requests
                         //allow login page and static files
-                        .requestMatchers("/login","/register", "/images/**", "/css/**").permitAll()
+                        .requestMatchers("/home","/login","/register", "/images/**", "/css/**").permitAll()
                         //everything else requires login
                         .anyRequest().authenticated()
                 )
