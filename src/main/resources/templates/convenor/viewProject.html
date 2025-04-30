@@ -28,15 +28,26 @@
     <!-- Groups Section -->
     <section class="section">
         <h2>Project Groups</h2>
+
         <div th:if="${#lists.isEmpty(groups)}">
             <p>No groups created yet.</p>
         </div>
-        <ul th:if="${!#lists.isEmpty(groups)}">
-            <li th:each="group : ${groups}">
-                <strong th:text="${group.groupName}">Group Name</strong>
-                <span> (Members: <span th:text="${#lists.size(group.groupMembers)}">0</span>)</span>
-            </li>
-        </ul>
+
+        <div th:if="${!#lists.isEmpty(groups)}">
+            <ul>
+                <li th:each="group : ${groups}">
+                    <strong th:text="${group.groupName}">Group Name</strong>
+                    <span> (Members: <span th:text="${#lists.size(group.groupMembers)}">0</span>)</span>
+
+                    <ul class="member-list">
+                        <li th:each="member : ${group.groupMembers}">
+                            <span th:text="${member.student.student.firstName + ' ' + member.student.student.lastName}">Student Name</span>
+                            (<span th:text="${member.student.student.email}">email</span>)
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </section>
 
     <hr/>

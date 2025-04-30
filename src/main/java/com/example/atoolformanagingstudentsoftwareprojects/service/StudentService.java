@@ -25,7 +25,6 @@ public class StudentService {
             return Collections.emptyList();
         }
 
-        // Assuming projects are join-fetched, otherwise lazy-loading risk
         return studentDetails.getProjects();
     }
 
