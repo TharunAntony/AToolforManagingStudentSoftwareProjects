@@ -301,7 +301,7 @@ public class GroupService {
         return score;
     }
 
-    //Made for testing purposes but implemented to show convenor.
+    //Made for testing purposes but implemented to show convenor group compatibility
     public Map<Long, Double> evaluateGroupCompatibility(List<Groups> groups) {
         Map<Long, Double> groupScores = new HashMap<>();
 
@@ -310,33 +310,33 @@ public class GroupService {
             double totalCompat = 0;
             int pairCount = 0;
 
-            // Calculate compatibility between each pair
+            //Calculate compatibility between each pair
             for (int i = 0; i < members.size(); i++) {
                 for (int j = i+1; j < members.size(); j++) {
                     try {
                         User u1 = members.get(i).getStudent().getStudent();
                         User u2 = members.get(j).getStudent().getStudent();
 
-                        // Skip if either user is null
+                        //Skip if either user is null
                         if (u1 == null || u2 == null) {
-                            totalCompat += 0.5; // Default neutral compatibility
+                            totalCompat += 0; // Default neutral compatibility
                             pairCount++;
                             continue;
                         }
 
-                        // Calculate compatibility and handle potential exceptions
+                        //Calculate compatibility and handle potential exceptions
                         double compatScore = calculateCompatibility(u1, u2);
                         totalCompat += compatScore;
                         pairCount++;
                     } catch (Exception exception) {
-                        // If any error occurs during compatibility calculation, use a default score of 0.5 (neutral compatibility)
-                        totalCompat += 0.5;
+                        //If any error occurs during compatibility calculation use a default score of 0
+                        totalCompat += 0;
                         pairCount++;
                     }
                 }
             }
 
-            // Calculate average compatibility, ensuring we don't divide by zero
+            //Calculate average compatibility ensuring we don't divide by zero
             double avgCompat = (pairCount > 0) ? totalCompat / pairCount : 0.5;
             groupScores.put(group.getId(), avgCompat);
         }

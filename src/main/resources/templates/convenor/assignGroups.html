@@ -14,7 +14,6 @@
 <div class="container">
     <h1 th:text="'Assign Groups for: ' + ${project.title}">Assign Groups</h1>
 
-    <!-- Flash Messages -->
     <div class="flash-messages">
         <div th:if="${error}" class="error-message">
             <p th:text="${error}"></p>
@@ -58,6 +57,10 @@
     <form th:action="@{|/convenor/project/${project.id}/assignGroups/autoAllocate|}" method="post">
         <button type="submit" class="groups-btn">Auto Allocate Groups</button>
     </form>
+    <form th:action="@{|/convenor/project/${project.id}/assignGroups/deleteGroups|}" method="post" style="display:inline;">
+        <button type="submit" class="btn delete-btn">Delete All Groups</button>
+    </form>
+
 
 </div>
 

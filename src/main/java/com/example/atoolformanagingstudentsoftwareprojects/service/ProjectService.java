@@ -2,12 +2,11 @@ package com.example.atoolformanagingstudentsoftwareprojects.service;
 
 import com.example.atoolformanagingstudentsoftwareprojects.dto.ProjectForm;
 import com.example.atoolformanagingstudentsoftwareprojects.model.*;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.UserRepository;
+import com.example.atoolformanagingstudentsoftwareprojects.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +26,13 @@ public class ProjectService {
     @Autowired
     private StudentDetailsRepository studentDetailsRepository;
 
+    @Autowired
+    private GroupsRepository groupsRepository;
+
+    @Autowired
+    private GroupMemberRepository groupMemberRepository;
+
+    //Creates and saves the details of a new project
     public void saveProject(ProjectForm form,@AuthenticationPrincipal CurrentUser currentUser) {
         Project project = new Project();
         project.setTitle(form.getTitle());
@@ -61,7 +67,7 @@ public class ProjectService {
         return users;
     }
 
-    // Get the students available to be added to the project (students not already in it)
+    // Get the students available to be added to the project (students who not already in it)
     public List<User> getAvailableStudentsForProject(Project project) {
         List<User> allStudents = userRepository.findByRole(Role.STUDENT);
         List<User> assignedStudents = getStudentsAssignedToProject(project);
@@ -107,7 +113,21 @@ public class ProjectService {
         return project.getGroups();
     }
 
+    @Transactional
+    public void deleteGroupsForProject(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid project ID: " + projectId));
 
+        List<Groups> groups = project.getGroups();
+        // Delete all members first
+        List<GroupMember> allMembers = groupMemberRepository.findByGroup_Project(project);
+        groupMemberRepository.deleteAll(allMembers);
+
+        // Then delete the groups
+        groupsRepository.deleteByProjectId(projectId);
+
+
+    }
 
 
 

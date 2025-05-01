@@ -189,6 +189,18 @@ public class ProjectController {
         return "redirect:/convenor/project/" + projectId + "/assignGroups";
     }
 
+    @PostMapping("/project/{id}/assignGroups/deleteGroups")
+    public String deleteGroups(@PathVariable("id") Long projectId, RedirectAttributes redirectAttributes) {
+        try {
+            projectService.deleteGroupsForProject(projectId);
+            redirectAttributes.addFlashAttribute("success", "All groups deleted successfully.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to delete groups." );
+        }
+        return "redirect:/convenor/project/" + projectId + "/assignGroups";
+    }
+
+
 
 
 }
