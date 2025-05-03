@@ -19,15 +19,15 @@ public class Submission {
     private Project project;
 
     //Link to group that made the submission
-    @ManyToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id")
     private Groups group;
 
 
     //Details about submission
     private LocalDateTime submittedAt;
-    private boolean submitted;
-    private boolean late;
+    private boolean late = false;
+    private boolean submitted = false;
     private Double finalGroupMark;
 
     //Empty Constructor

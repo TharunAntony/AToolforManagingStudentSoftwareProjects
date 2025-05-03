@@ -78,7 +78,6 @@ It is commented out and is recommended to be only ran once to create new student
 Once it is run once it can be commented out again or can be deleted. There is 2 types of student test data, one with preferences and one without. It is recommended to test with the students with preferences first then add the students with no preferences.
 Convenors will have to be created manually through the register system on the webpage.
 
-
 If you need help running the program, feel free to contact me through my university email:
 
 ta301@student.le.ac.uk

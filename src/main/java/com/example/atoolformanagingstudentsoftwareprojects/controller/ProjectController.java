@@ -74,13 +74,14 @@ public class ProjectController {
     @GetMapping("/project/{id}/editProject")
     public String editProjectForm(@PathVariable Long id, Model model) {
         Project project  = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found"));
-        model.addAttribute("projectForm", new ProjectForm());
+        ProjectForm projectForm = projectService.convertToForm(project);
+        model.addAttribute("projectForm", projectForm);
         model.addAttribute("project", project);
         return "convenor/editProject";
     }
 
     @PostMapping("/project/{id}/editProject")
-    public String editProject(@ModelAttribute ProjectForm form, @PathVariable Long id, Model model, @AuthenticationPrincipal CurrentUser currentUser) {
+    public String editProject(@ModelAttribute ProjectForm form, @PathVariable Long id, @AuthenticationPrincipal CurrentUser currentUser) {
         Project project = new Project();
         project.setId(id);
         project.setTitle(form.getTitle());

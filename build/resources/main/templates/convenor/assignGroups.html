@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assign Groups</title>
     <link rel="stylesheet" href="/css/convenor/assignGroups.css">
     <link rel="stylesheet" href="/css/convenor/navbar.css">
@@ -11,24 +12,25 @@
 <!-- Navbar -->
 <div th:replace="fragments/navbar :: navbar"></div>
 
+
 <div class="container">
     <h1 th:text="'Assign Groups for: ' + ${project.title}">Assign Groups</h1>
 
-    <!-- Flash Messages -->
-    <div class="flash-messages">
-        <div th:if="${error}" class="error-message">
-            <p th:text="${error}"></p>
+    <div class="flashMessages">
+        <div th:if="${error}" class="errorMessage">
+             <p th:text="${error}"></p>
         </div>
-        <div th:if="${success}" class="success-message">
+        <div th:if="${success}" class="successMessage">
             <p th:text="${success}"></p>
         </div>
     </div>
+
 
     <div class="section">
         <h2>Students in Project</h2>
         <div class="list-box scroll-box">
             <div th:if="${#lists.isEmpty(assignedStudents)}">
-                <p>No students have been assigned yet.</p>
+                    <p>No students have been assigned yet.</p>
             </div>
             <ul th:if="${!#lists.isEmpty(assignedStudents)}">
                 <li th:each="student : ${assignedStudents}">
@@ -37,6 +39,8 @@
             </ul>
         </div>
     </div>
+
+
 
     <div class="section">
         <h2>Groups</h2>
@@ -49,7 +53,7 @@
                     <span th:text="'Group ' + ${group.id}"></span>
                     <span th:if="${groupScores != null}" style="margin-left: 10px; font-size: 0.9em; color: #555;">
                     (Score: <span th:text="${#numbers.formatDecimal(groupScores[group.id], 1, 2)}">0.00</span>)
-                </span>
+                        </span>
                 </li>
             </ul>
         </div>
@@ -58,6 +62,11 @@
     <form th:action="@{|/convenor/project/${project.id}/assignGroups/autoAllocate|}" method="post">
         <button type="submit" class="groups-btn">Auto Allocate Groups</button>
     </form>
+
+    <form th:action="@{|/convenor/project/${project.id}/assignGroups/deleteGroups|}" method="post" style="display:inline;">
+        <button type="submit" class="btn delete-btn">Delete All Groups</button>
+    </form>
+
 
 </div>
 

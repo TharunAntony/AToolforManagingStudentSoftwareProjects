@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View My Projects</title>
     <link rel="stylesheet" href="/css/student/projects.css">
     <link rel="stylesheet" href="/css/student/navBar.css">
@@ -12,7 +13,7 @@
 <div th:replace="fragments/studentNavBar :: navbar"></div>
 
 <div class="container">
-    <h1>My Projects</h1>
+    <h1>My Projects:</h1>
 
     <div class="projects-section">
         <div th:if="${#lists.isEmpty(projects)}">

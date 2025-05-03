@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Home</title>
     <link rel="stylesheet" href="/css/student/home.css">
     <link rel="stylesheet" href="/css/student/navBar.css">
@@ -23,12 +24,23 @@
     <h2>Current Projects:</h2>
 
     <div class="projects-list">
-        <a th:each="project : ${projects}" th:href="@{|/student/project/${project.id}|}" class="project-card">
+        <a th:each="project : ${currentProjects}" th:href="@{|/student/project/${project.id}|}" class="project-card">
             <div class="project-title" th:text="${project.title}">Project Title</div>
             <div class="project-description" th:text="${project.description}">Short project description...</div>
         </a>
     </div>
 
+    <h2 style="margin-top: 40px;">Completed Projects</h2>
+
+    <div class="projects-list completed-list">
+        <a th:each="project : ${completedProjects}" th:href="@{|/student/project/${project.id}|}" class="project-card completed-card">
+            <div class="project-title" th:text="${project.title}">Project Title</div>
+            <div class="project-description" th:text="${project.description}">Short project description...</div>
+        </a>
+    </div>
+
+    <p th:if="${success}" th:text="${success}"></p>
+    <p th:if="${error}" th:text="${error}"></p>
 
 </div>
 

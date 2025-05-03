@@ -23,6 +23,10 @@ public class Groups {
     @JoinColumn(name = "project_id")
     private Project project;
 
+    @OneToOne(mappedBy = "group", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Submission submission;
+
+
     //Empty Constructor
     public Groups() {}
 
@@ -57,5 +61,13 @@ public class Groups {
 
     public void setGroupMembers(List<GroupMember> groupMembers) {
         this.groupMembers = groupMembers;
+    }
+
+    public Submission getSubmission() {
+        return submission;
+    }
+
+    public void setSubmission(Submission submission) {
+        this.submission = submission;
     }
 }

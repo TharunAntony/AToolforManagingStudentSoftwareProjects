@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - GroupServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>GroupServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.example.atoolformanagingstudentsoftwareprojects.service.html">com.example.atoolformanagingstudentsoftwareprojects.service</a> &gt; GroupServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">2</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.086s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">testCompatibilityScore()</td>
+<td class="success">0.009s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testEvaluateGroupCompatibility()</td>
+<td class="success">0.077s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2025-05-03T01:24:32.413+01:00  INFO 5076 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest]: GroupServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-05-03T01:24:32.425+01:00  INFO 5076 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.atoolformanagingstudentsoftwareprojects.AToolforManagingStudentSoftwareProjectsApplication for test class com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest
+0.88
+2025-05-03T01:24:32.447+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+Hibernate: insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+2025-05-03T01:24:32.455+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
+Hibernate: insert into student_details (student_id) values (?)
+2025-05-03T01:24:32.460+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+Hibernate: insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+2025-05-03T01:24:32.464+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+Hibernate: insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+2025-05-03T01:24:32.464+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
+Hibernate: insert into student_details (student_id) values (?)
+2025-05-03T01:24:32.471+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+Hibernate: insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+2025-05-03T01:24:32.476+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+Hibernate: insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+2025-05-03T01:24:32.479+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
+Hibernate: insert into student_details (student_id) values (?)
+2025-05-03T01:24:32.483+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+Hibernate: insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+2025-05-03T01:24:32.485+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into groups_table (group_name,project_id) values (?,?)
+Hibernate: insert into groups_table (group_name,project_id) values (?,?)
+2025-05-03T01:24:32.489+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
+Hibernate: insert into group_member (group_id,student_id) values (?,?)
+2025-05-03T01:24:32.492+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
+Hibernate: insert into group_member (group_id,student_id) values (?,?)
+2025-05-03T01:24:32.495+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
+Hibernate: insert into group_member (group_id,student_id) values (?,?)
+2025-05-03T01:24:32.510+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : select gm1_0.id,gm1_0.group_id,gm1_0.student_id from group_member gm1_0 where gm1_0.group_id=?
+Hibernate: select gm1_0.id,gm1_0.group_id,gm1_0.student_id from group_member gm1_0 where gm1_0.group_id=?
+Group compatibility test passed
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 8.13</a> at 3 May 2025, 01:24:32</p>
+</div>
+</div>
+</body>
+</html>

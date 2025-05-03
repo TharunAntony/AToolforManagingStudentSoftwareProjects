@@ -2,18 +2,16 @@ package com.example.atoolformanagingstudentsoftwareprojects.controller;
 
 import com.example.atoolformanagingstudentsoftwareprojects.dto.StudentPreferencesForm;
 import com.example.atoolformanagingstudentsoftwareprojects.model.*;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.GroupMemberRepository;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
-import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
-import com.example.atoolformanagingstudentsoftwareprojects.service.ProjectService;
-import com.example.atoolformanagingstudentsoftwareprojects.service.StudentPreferencesService;
-import com.example.atoolformanagingstudentsoftwareprojects.service.StudentService;
+import com.example.atoolformanagingstudentsoftwareprojects.repository.*;
+import com.example.atoolformanagingstudentsoftwareprojects.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -37,14 +35,39 @@ public class StudentController {
     @Autowired
     private GroupMemberRepository groupMemberRepository;
 
+    @Autowired
+    private SubmissionService submissionService;
+    @Autowired
+    private ProjectRepository projectRepository;
+    @Autowired
+    private SubmissionRepository submissionRepository;
+    @Autowired
+    private GroupsRepository groupsRepository;
+
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
         User user = currentUser.getUser();
-        List<Project> projects = studentService.getStudentProjects(user);
+        List<Project> projects = projectRepository.findBystudents(user.getStudentDetails());
+
+        List<Project> currentProjects = new ArrayList<>();
+        List<Project> completedProjects = new ArrayList<>();
+        List<Groups> studentGroups = studentService.getStudentGroups(user.getStudentDetails().getId());
+
+
+        for(Groups group : studentGroups){
+            Submission submission = group.getSubmission();
+            if(submission == null || !submission.isSubmitted()){
+                currentProjects.add(group.getProject());
+            }else{
+                completedProjects.add(group.getProject());
+            }
+        }
 
         model.addAttribute("username", user.getUsername());
         model.addAttribute("firstName", user.getFirstName());
         model.addAttribute("projects", projects);
+        model.addAttribute("completedProjects", completedProjects);
+        model.addAttribute("currentProjects", currentProjects);
         return "student/home";
     }
 
@@ -128,6 +151,10 @@ public class StudentController {
         List<GroupMember> groupMembers = new ArrayList<>();
         if (studentGroup != null) {
             groupMembers = groupMemberRepository.findByGroup(studentGroup);
+            Submission submission = submissionService.findByGroup(studentGroup);
+            model.addAttribute("submission", submission);
+        }else {
+            model.addAttribute("submission", null);
         }
 
         model.addAttribute("project", project);
@@ -135,6 +162,43 @@ public class StudentController {
         model.addAttribute("groupMembers", groupMembers);
 
         return "student/viewProject";
+    }
+
+    @PostMapping("/project/{projectId}/submit")
+    public String submitProject(@RequestParam Long groupId,
+                                @AuthenticationPrincipal CurrentUser currentUser,
+                                RedirectAttributes redirectAttributes) {
+
+        Groups group = studentService.getGroupById(groupId);
+        if (group == null) {
+            redirectAttributes.addFlashAttribute("error", "Group not found.");
+            return "redirect:/student/project/" + groupId;
+        }
+
+        Submission submission = submissionService.findByGroup(group);
+        if (submission != null && submission.isSubmitted()) {
+            redirectAttributes.addFlashAttribute("error", "This group has already submitted the project.");
+            return "redirect:/student/project/" + group.getProject().getId();
+        }
+
+        if (submission == null) {
+            submission = new Submission();
+            submission.setGroup(group);
+            submission.setProject(group.getProject());
+        }
+
+        submission.setSubmitted(true);
+        submission.setSubmittedAt(LocalDateTime.now());
+
+        LocalDateTime deadline = group.getProject().getDeadline();
+        if (deadline != null && submission.getSubmittedAt().isAfter(deadline)) {
+            submission.setLate(true);
+        }
+
+        submissionService.saveSubmission(submission);
+
+        redirectAttributes.addFlashAttribute("success", "Project submitted successfully!");
+        return "redirect:/student/home";
     }
 
 

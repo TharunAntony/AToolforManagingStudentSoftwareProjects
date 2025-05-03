@@ -2,6 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Details</title>
     <link rel="stylesheet" href="/css/student/viewProject.css">
     <link rel="stylesheet" href="/css/student/navBar.css">
@@ -41,6 +42,19 @@
             <p>You are not assigned to any group yet.</p>
         </div>
     </div>
+
+</div>
+
+<div style="text-align: center">
+    <form action="/student/project/{projectId}/submit" method="post" th:if="${submission == null or !submission.submitted}" >
+        <input type="hidden" name="groupId" th:value="${group.id}"/>
+        <button type="submit" class="submit-btn">Submit Project</button>
+    </form>
+
+    <p th:if="${submission != null and submission.submitted}" class="submitted-message" >Project has already been submitted.</p>
+
+    <p th:if="${success}" th:text="${success}"></p>
+    <p th:if="${error}" th:text="${error}"></p>
 
 </div>
 

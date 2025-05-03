@@ -18,15 +18,23 @@ h1, h2 {
 }
 
 .projects-list {
+    background: #ffffff;
+    border-radius: 10px;
+    gap: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    margin-top: 20px;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .project-card {
     background: #ffffff;
     border-radius: 10px;
+    gap: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     width: 100%;
     padding: 20px;
@@ -53,3 +61,20 @@ h1, h2 {
     font-size: 15px;
     color: #555;
 }
+
+
+.project-card {
+    background: #f8f9fa;
+    border-left: 4px solid #00074a;
+}
+
+
+.completed-list .project-card {
+    background: #f8f9fa;
+    border-left: 4px solid #28a745;
+}
+
+.completed-list .project-card:hover {
+    background-color: #e2e6ea;
+}
+

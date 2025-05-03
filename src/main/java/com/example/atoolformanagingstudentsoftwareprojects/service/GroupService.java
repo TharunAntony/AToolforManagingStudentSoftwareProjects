@@ -134,10 +134,10 @@ public class GroupService {
             group.setGroupName("Group " + group.getId());
             group = groupRepository.save(group);
             // Add seed student to group
-            GroupMember seedMember = new GroupMember();
-            seedMember.setGroup(group);
-            seedMember.setStudent(seedStudent.getStudentDetails());
-            groupMembersRepository.save(seedMember);
+            GroupMember seedGroupMember = new GroupMember();
+            seedGroupMember.setGroup(group);
+            seedGroupMember.setStudent(seedStudent.getStudentDetails());
+            groupMembersRepository.save(seedGroupMember);
 
             groupsList.add(group);
         }
@@ -250,7 +250,7 @@ public class GroupService {
     }
 
     //Calculates the compatibility of 2 students working in a group using their preferences
-    private double calculateCompatibility(User s1, User s2) {
+    public double calculateCompatibility(User s1, User s2) {
         StudentPreferences p1 = s1.getStudentDetails().getStudentPreferences();
         StudentPreferences p2 = s2.getStudentDetails().getStudentPreferences();
 
@@ -270,15 +270,9 @@ public class GroupService {
         score += (1.0 - Math.abs(p1.getTechnicalSkill() - p2.getTechnicalSkill()) / 4.0) * 0.15;
 
         //Compares communication skills and pairs up strong with weak communication
-        int commDiff = Math.abs(p1.getCommunicationSkill() - p2.getCommunicationSkill());
-        if (commDiff == 2) {
-            score += 0.10;
-        } else if (commDiff == 1 || commDiff == 3) {
-            score += 0.07;
-        } else if (commDiff == 0 || commDiff == 4) {
-            score += 0.03;
-        }
-
+        int combinedComm = p1.getCommunicationSkill() + p2.getCommunicationSkill();
+        int difference = Math.abs(6 - combinedComm);
+        score += Math.max(0.1 - 0.02 * (difference), 0);
 
         //Compares to see if one is leader and other one is a supporter. Higher score if they are.
         if ((p1.getLeadershipPreference() == 1 && p2.getLeadershipPreference() == 2)
@@ -291,17 +285,21 @@ public class GroupService {
             score += 0.1;
         }
 
-        //Students with more teamwork experience are matched together
-        score += ((p1.getTeamworkExperience() + p2.getTeamworkExperience()) / 10.0) * 0.15;
 
-        if (p1.getPriorExperience() || p2.getPriorExperience()) {
+        //Encourages pairing between students with different experience levels
+        int combinedTeamExp = p1.getTeamworkExperience() + p2.getTeamworkExperience();
+        int differenceTeamExp = Math.abs(6 - combinedTeamExp);
+        score += Math.max(1 - 0.2 * (differenceTeamExp), 0) * 0.15;
+
+
+        if (p1.getPriorExperience() && !p2.getPriorExperience() || !p1.getPriorExperience() && p2.getPriorExperience()) {
             score += 0.15;
         }
 
         return score;
     }
 
-    //Made for testing purposes but implemented to show convenor group compatibility
+    //Used to calculate the average compatibility between students in group and get a group compatibility score
     public Map<Long, Double> evaluateGroupCompatibility(List<Groups> groups) {
         Map<Long, Double> groupScores = new HashMap<>();
 

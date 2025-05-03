@@ -39,12 +39,12 @@ h1, h2 {
     border-bottom: none;
 }
 
-.flash-messages {
+.flashMessages {
     margin: 20px 0;
     text-align: center;
 }
 
-.error-message {
+.errorMessage {
     background-color: #f8d7da;
     color: #721c24;
     padding: 10px;
@@ -52,7 +52,7 @@ h1, h2 {
     margin-bottom: 10px;
 }
 
-.success-message {
+.successMessage {
     background-color: #d4edda;
     color: #155724;
     padding: 10px;
@@ -73,6 +73,21 @@ h1, h2 {
     display: block;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
+
+.delete-btn {
+    background-color: #c8102e;
+    color: white;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #a50f26;
+}
+
 
 .groups-btn:hover {
     background-color: #002147;
