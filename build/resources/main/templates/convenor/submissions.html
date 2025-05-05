@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Submissions</title>
+    <link rel="stylesheet" href="/css/convenor/submissions.css">
+    <link rel="stylesheet" href="/css/convenor/navbar.css">
+</head>
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+<h1>Projects With Submissions</h1>
+
+<div>
+    <div th:each="project : ${projectsWithSubmissions}" class="project-card">
+        <h2 th:text="${project.title}">Project Title</h2>
+        <p>Deadline: <span th:text="${#temporals.format(project.deadline, 'dd-MM-yyyy HH:mm')}"></span></p>
+        <p>Number of submissions: <span th:text="${project.submissionCount}"></span></p>
+        <a th:href="@{'/convenor/submissions/project/' + ${project.id}}">View Submissions</a>
+        <hr>
+    </div>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -36,6 +36,8 @@
                     <span th:text="${member.student.student.firstName + ' ' + member.student.student.lastName}">Member Name</span>
                 </li>
             </ul>
+            <p th:if="${submission != null and submission.finalGroupMark != null}"><strong>Submission Marks:</strong> <span th:text="${submission.finalGroupMark}"></span> </p>
+            <p th:if="${submission != null and submission.finalGroupMark == null}"><strong>Submission Marks:</strong> Your submission hasn't been marked yet. </p>
         </div>
 
         <div th:if="${group == null}">

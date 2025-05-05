@@ -135,12 +135,12 @@ public class StudentController {
 
         Project project = projectService.getProjectById(projectId);
 
-        // Find all group memberships for this student
+        //Find all group memberships for this student
         List<GroupMember> memberships = groupMemberRepository.findByStudent(user.getStudentDetails());
 
         Groups studentGroup = null;
 
-        // Check if the student is assigned to a group for this project
+        //Check if the student is assigned to a group for this project
         for (GroupMember gm : memberships) {
             if (gm.getGroup() != null && gm.getGroup().getProject().getId().equals(project.getId())) {
                 studentGroup = gm.getGroup();

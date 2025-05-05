@@ -1,24 +1,38 @@
 package com.example.atoolformanagingstudentsoftwareprojects.controller;
 
+import com.example.atoolformanagingstudentsoftwareprojects.dto.SubmissionMarkForm;
+import com.example.atoolformanagingstudentsoftwareprojects.dto.SubmissionMarkFormList;
 import com.example.atoolformanagingstudentsoftwareprojects.model.Project;
 import com.example.atoolformanagingstudentsoftwareprojects.model.User;
+import com.example.atoolformanagingstudentsoftwareprojects.model.Groups;
+import com.example.atoolformanagingstudentsoftwareprojects.model.Submission;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
+import com.example.atoolformanagingstudentsoftwareprojects.service.ProjectService;
+import com.example.atoolformanagingstudentsoftwareprojects.service.SubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/convenor")
 public class ConvenorController {
 
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private ProjectService projectService;
+    @Autowired
+    private SubmissionService submissionService;
 
-    @GetMapping("/convenor/home")
+
+    @GetMapping("/home")
     public String convenorHome(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         User user = currentUser.getUser();
         List<Project> projects = projectRepository.findByConvenor(user.getConvenorDetails());
@@ -27,6 +41,71 @@ public class ConvenorController {
         model.addAttribute("projects", projects);
         return "convenor/home";
     }
+
+    @GetMapping("/submissions")
+    public String showProjectSubmissions(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
+
+        User user = currentUser.getUser();
+        List<Project> projects = projectService.getProjects(user);
+        List<Project> projectsWithSubmissions = new ArrayList<>();
+
+        for(Project project : projects){
+            int submissionCount = 0;
+
+            for(Groups group : project.getGroups()){
+                Submission submission = group.getSubmission();
+                if(submission != null && submission.isSubmitted()){
+                    submissionCount++;
+                }
+            }
+
+            if(submissionCount > 0){
+                project.setSubmissionCount(submissionCount); // transient field
+                projectsWithSubmissions.add(project);
+            }
+        }
+
+        model.addAttribute("projectsWithSubmissions", projectsWithSubmissions);
+
+        return "convenor/submissions";
+    }
+
+    @GetMapping("/submissions/project/{projectId}")
+    public String viewProjectSubmissions(@PathVariable Long projectId, Model model) {
+
+        Project project = projectService.getProjectById(projectId);
+        List<Groups> groups = project.getGroups();
+
+        List<Submission> submissions = new ArrayList<>();
+        for (Groups group : groups) {
+            Submission submission = group.getSubmission();
+            if (submission != null && submission.isSubmitted()) {
+                submissions.add(submission);
+            }
+        }
+
+        model.addAttribute("project", project);
+        model.addAttribute("submissions", submissions);
+        return "convenor/projectSubmissions";
+    }
+
+    @PostMapping("/submissions/project/{projectId}/saveMarks")
+    public String saveMarks(@PathVariable Long projectId, @ModelAttribute("marksList") SubmissionMarkFormList marksList, RedirectAttributes redirectAttributes) {
+
+        if (marksList != null && marksList.getMarkForms() != null) {
+            for (SubmissionMarkForm form : marksList.getMarkForms()) {
+                Submission submission = submissionService.findById(form.getSubmissionId());
+                if (submission != null) {
+                    submission.setFinalGroupMark(form.getMark());
+                    submissionService.saveSubmission(submission);
+                }
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Marks saved successfully!");
+        return "redirect:/convenor/submissions/project/" + projectId;
+    }
+
 
 
 

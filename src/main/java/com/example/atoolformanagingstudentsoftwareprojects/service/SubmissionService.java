@@ -19,4 +19,9 @@ public class SubmissionService {
     public Submission findByGroup(Groups group) {
         return submissionRepository.findByGroup(group);
     }
+
+    public Submission findById(Long id) {
+        return submissionRepository.findById(id).orElse(null);
+    }
+
 }

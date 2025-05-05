@@ -40,6 +40,8 @@ public class Project {
     private String Description;
     private LocalDateTime Deadline;
     private Integer groupCapacity;
+    @Transient
+    private int submissionCount;
 
     //Empty Constructor
     public Project(){
@@ -117,5 +119,13 @@ public class Project {
 
     public void setStudents(List<StudentDetails> students) {
         this.students = students;
+    }
+
+    public int getSubmissionCount() {
+        return submissionCount;
+    }
+
+    public void setSubmissionCount(int submissionCount) {
+        this.submissionCount = submissionCount;
     }
 }
