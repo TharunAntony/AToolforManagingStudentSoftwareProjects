@@ -5,16 +5,14 @@ body {
     padding: 0;
 }
 
-.error-message{
-    color: #990000;
-}
-
-.content {
+.container {
     padding: 30px;
 }
 
 h1, h2 {
     color: #002147;
+    margin-bottom: 20px;
+    font-size: 30px;
 }
 
 .projects-list {
@@ -46,12 +44,12 @@ h1, h2 {
 }
 
 .project-card:hover {
-    background-color: #e9ecef;
+    background-color: #f0f0f0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .project-title {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
     color: #002147;
     margin-bottom: 2px;
@@ -62,19 +60,14 @@ h1, h2 {
     color: #555;
 }
 
-
 .project-card {
     background: #f8f9fa;
     border-left: 4px solid #00074a;
 }
-
 
 .completed-list .project-card {
     background: #f8f9fa;
     border-left: 4px solid #28a745;
 }
 
-.completed-list .project-card:hover {
-    background-color: #e2e6ea;
-}
 

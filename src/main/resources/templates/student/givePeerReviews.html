@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Peer Review</title>
+    <link rel="stylesheet" href="/css/student/navBar.css">
+    <link rel="stylesheet" href="/css/student/givePeerReviews.css">
+</head>
+<body>
+
+<div th:replace="fragments/studentNavbar :: navbar"></div>
+
+<div class="container">
+    <h1 th:text="${project.title}">Project Title</h1>
+
+    <form th:action="@{'/student/peerReview/project/' + ${project.id} + '/submit'}" method="post" th:if="${canEdit}">
+        <table>
+            <tr>
+                <th>Student</th>
+                <th>Score (1-10)</th>
+                <th>Comment (optional)</th>
+            </tr>
+            <tr th:each="review, i : ${peerReviews}">
+                <td th:text="${review.reviewee.firstName + ' ' + review.reviewee.lastName}"></td>
+                <td>
+                    <input type="hidden" th:name="|peerReviews[${i.index}].reviewee.id|"
+                           th:value="${review.reviewee.id}" />
+                    <input type="number" min="1" max="10" required th:name="|peerReviews[${i.index}].score|" th:value="${review.score}" th:disabled="${!canEdit}"/>
+                </td>
+                <td>
+                    <textarea rows="2" cols="40" th:name="|peerReviews[${i.index}].comment|" th:text="${review.comment}" th:disabled="${!canEdit}"></textarea>
+                </td>
+            </tr>
+        </table>
+
+
+        <button type="submit">Submit Reviews</button>
+    </form>
+
+
+    <div th:if="${!canEdit}" class="submitted-message">
+        <p>Peer review has already been submitted and the deadline has passed. You can't make changes now.</p>
+
+        <table class="submittedReviews-table">
+            <tr>
+                <th>Student</th>
+                <th>Score</th>
+                <th>Comment</th>
+            </tr>
+            <tr th:each="review : ${submittedReviews}">
+                <td th:text="${review.reviewee.firstName + ' ' + review.reviewee.lastName}"></td>
+                <td th:text="${review.score}"></td>
+                <td th:text="${review.comment}"></td>
+            </tr>
+        </table>
+    </div>
+
+
+    <p th:if="${success}" th:text="${success}"></p>
+</div>
+
+</body>
+</html>

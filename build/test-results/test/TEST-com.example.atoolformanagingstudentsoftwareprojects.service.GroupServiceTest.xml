@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-05-03T00:24:32.429Z" hostname="THARUN" time="0.09">
+<testsuite name="com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2025-05-08T22:27:11.883Z" hostname="THARUN" time="0.072">
   <properties/>
-  <testcase name="testCompatibilityScore()" classname="com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest" time="0.009"/>
-  <testcase name="testEvaluateGroupCompatibility()" classname="com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest" time="0.077"/>
-  <system-out><![CDATA[2025-05-03T01:24:32.413+01:00  INFO 5076 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest]: GroupServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-2025-05-03T01:24:32.425+01:00  INFO 5076 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.atoolformanagingstudentsoftwareprojects.AToolforManagingStudentSoftwareProjectsApplication for test class com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest
+  <testcase name="testCompatibilityScore()" classname="com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest" time="0.007"/>
+  <testcase name="testEvaluateGroupCompatibility()" classname="com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest" time="0.064"/>
+  <system-out><![CDATA[2025-05-08T23:27:11.872+01:00  INFO 42656 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest]: GroupServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2025-05-08T23:27:11.880+01:00  INFO 42656 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.example.atoolformanagingstudentsoftwareprojects.AToolforManagingStudentSoftwareProjectsApplication for test class com.example.atoolformanagingstudentsoftwareprojects.service.GroupServiceTest
 0.88
-2025-05-03T01:24:32.447+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+2025-05-08T23:27:11.894+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
 Hibernate: insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
-2025-05-03T01:24:32.455+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
+2025-05-08T23:27:11.897+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
 Hibernate: insert into student_details (student_id) values (?)
-2025-05-03T01:24:32.460+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+2025-05-08T23:27:11.901+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
 Hibernate: insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
-2025-05-03T01:24:32.464+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+2025-05-08T23:27:11.907+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
 Hibernate: insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
-2025-05-03T01:24:32.464+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
+2025-05-08T23:27:11.909+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
 Hibernate: insert into student_details (student_id) values (?)
-2025-05-03T01:24:32.471+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+2025-05-08T23:27:11.910+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
 Hibernate: insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
-2025-05-03T01:24:32.476+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
+2025-05-08T23:27:11.911+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
 Hibernate: insert into user (email,first_name,last_name,password,role,username) values (?,?,?,?,?,?)
-2025-05-03T01:24:32.479+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
+2025-05-08T23:27:11.912+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into student_details (student_id) values (?)
 Hibernate: insert into student_details (student_id) values (?)
-2025-05-03T01:24:32.483+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
+2025-05-08T23:27:11.913+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
 Hibernate: insert into student_preferences (communication_skill,deadline_approach,leadership_preference,prior_experience,student_details_id,teamwork_experience,technical_skill,working_hours,working_style) values (?,?,?,?,?,?,?,?,?)
-2025-05-03T01:24:32.485+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into groups_table (group_name,project_id) values (?,?)
+2025-05-08T23:27:11.916+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into groups_table (group_name,project_id) values (?,?)
 Hibernate: insert into groups_table (group_name,project_id) values (?,?)
-2025-05-03T01:24:32.489+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
+2025-05-08T23:27:11.917+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
 Hibernate: insert into group_member (group_id,student_id) values (?,?)
-2025-05-03T01:24:32.492+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
+2025-05-08T23:27:11.919+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
 Hibernate: insert into group_member (group_id,student_id) values (?,?)
-2025-05-03T01:24:32.495+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
+2025-05-08T23:27:11.920+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : insert into group_member (group_id,student_id) values (?,?)
 Hibernate: insert into group_member (group_id,student_id) values (?,?)
-2025-05-03T01:24:32.510+01:00 DEBUG 5076 --- [    Test worker] org.hibernate.SQL                        : select gm1_0.id,gm1_0.group_id,gm1_0.student_id from group_member gm1_0 where gm1_0.group_id=?
+2025-05-08T23:27:11.931+01:00 DEBUG 42656 --- [    Test worker] org.hibernate.SQL                        : select gm1_0.id,gm1_0.group_id,gm1_0.student_id from group_member gm1_0 where gm1_0.group_id=?
 Hibernate: select gm1_0.id,gm1_0.group_id,gm1_0.student_id from group_member gm1_0 where gm1_0.group_id=?
 Group compatibility test passed
 ]]></system-out>

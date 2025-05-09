@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer Review Projects</title>
+    <link rel="stylesheet" href="/css/student/navBar.css">
+    <link rel="stylesheet" href="/css/student/peerReviews.css">
+
+</head>
+<body>
+<div th:replace="fragments/studentNavbar :: navbar"></div>
+
+<div class="container">
+    <h1>Projects Needing Peer Review</h1>
+    <div class="projects-list">
+        <a th:each="project : ${pendingReviewProjects}"
+           th:href="@{'/student/peerReview/project/' + ${project.id}}" class="project-card">
+            <div class="project-title" th:text="${project.title}">Project Title</div>
+            <div class="project-description" th:text="${project.description}">Description...</div>
+        </a>
+    </div>
+
+    <h2 style="margin-top: 40px;">Projects Already Peer Reviewed</h2>
+
+    <div class="projects-list completed-list">
+        <a th:each="project : ${submittedReviewProjects}" th:href="@{'/student/peerReview/project/' + ${project.id}}" class="project-card completed-card">
+            <div class="project-title" th:text="${project.title}">Project Title</div>
+            <div class="project-description" th:text="${project.description}">Description...</div>
+        </a>
+    </div>
+</div>
+
+<p th:if="${success}" th:text="${success}"></p>
+
+</body>
+</html>

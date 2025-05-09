@@ -12,11 +12,11 @@ public class PeerReview {
 
     //Student giving the review
     @ManyToOne
-    private User Reviewer;
+    private User reviewer;
 
     //Student receiving the review
     @ManyToOne
-    private User Reviewee;
+    private User reviewee;
 
     //Peer review details
     private int score;
@@ -46,19 +46,19 @@ public class PeerReview {
     }
 
     public User getReviewer() {
-        return Reviewer;
+        return reviewer;
     }
 
     public void setReviewer(User reviewer) {
-        Reviewer = reviewer;
+        this.reviewer = reviewer;
     }
 
     public User getReviewee() {
-        return Reviewee;
+        return reviewee;
     }
 
     public void setReviewee(User reviewee) {
-        Reviewee = reviewee;
+        this.reviewee = reviewee;
     }
 
     public int getScore() {

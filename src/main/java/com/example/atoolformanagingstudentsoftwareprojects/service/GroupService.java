@@ -78,7 +78,7 @@ public class GroupService {
         //Main algorithm works with students who have preferences
         students = studentsWithPrefs;
 
-        //Add some randomness to avoid same groupings when run multiple times
+        //Add some randomness to avoid same groupings when ran multiple times
         Collections.shuffle(students);
 
         //Calculate how well each pair of students would work together

@@ -1,5 +1,6 @@
 package com.example.atoolformanagingstudentsoftwareprojects.controller;
 
+import com.example.atoolformanagingstudentsoftwareprojects.dto.PeerReviewList;
 import com.example.atoolformanagingstudentsoftwareprojects.dto.StudentPreferencesForm;
 import com.example.atoolformanagingstudentsoftwareprojects.model.*;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.*;
@@ -43,6 +44,11 @@ public class StudentController {
     private SubmissionRepository submissionRepository;
     @Autowired
     private GroupsRepository groupsRepository;
+    @Autowired
+    private PeerReviewService peerReviewService;
+
+    @Autowired
+    private PeerReviewRepository peerReviewRepository;
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
@@ -165,9 +171,7 @@ public class StudentController {
     }
 
     @PostMapping("/project/{projectId}/submit")
-    public String submitProject(@RequestParam Long groupId,
-                                @AuthenticationPrincipal CurrentUser currentUser,
-                                RedirectAttributes redirectAttributes) {
+    public String submitProject(@RequestParam Long groupId, @AuthenticationPrincipal CurrentUser currentUser, RedirectAttributes redirectAttributes) {
 
         Groups group = studentService.getGroupById(groupId);
         if (group == null) {
@@ -199,6 +203,80 @@ public class StudentController {
 
         redirectAttributes.addFlashAttribute("success", "Project submitted successfully!");
         return "redirect:/student/home";
+    }
+
+    @GetMapping("/peerReview")
+    public String peerReview(@AuthenticationPrincipal CurrentUser currentUser, Model model){
+        User user = currentUser.getUser();
+        List<Project> pendingReviewProjects = new ArrayList<>();
+        List<Project> submittedReviewProjects = new ArrayList<>();
+
+        List<Groups> studentGroups = studentService.getStudentGroups(user.getStudentDetails().getId());
+
+        for (Groups group : studentGroups) {
+            Submission submission = group.getSubmission();
+
+            if (submission != null && submission.isSubmitted()) {
+                Project project = group.getProject();
+
+                boolean hasGivenReviews = peerReviewService.studentReviewed(user, project);
+                if (hasGivenReviews) {
+                    submittedReviewProjects.add(project);
+                } else {
+                    pendingReviewProjects.add(project);
+                }
+            }
+        }
+
+        model.addAttribute("pendingReviewProjects", pendingReviewProjects);
+        model.addAttribute("submittedReviewProjects", submittedReviewProjects);
+        return "student/peerReviews";
+    }
+
+    @GetMapping("/peerReview/project/{projectId}")
+    public String showPeerReviewForm(@PathVariable Long projectId, @AuthenticationPrincipal CurrentUser currentUser, Model model) {
+        User currentStudent = currentUser.getUser();
+        Project project = projectService.getProjectById(projectId);
+
+        Groups group = studentService.getGroupForProject(currentStudent, project);
+        if (group == null) {
+            model.addAttribute("error", "You are not part of a group for this project.");
+            return "redirect:/student/peerReview";
+        }
+
+        List<GroupMember> groupMembers = groupMemberRepository.findByGroup(group);
+        List<PeerReview> peerReviewList = peerReviewService.getPeerReviews(currentStudent, groupMembers, group, project);
+
+        boolean pastDeadline = project.getDeadline().isBefore(java.time.LocalDateTime.now());
+        boolean alreadyReviewed = peerReviewService.studentReviewed(currentStudent, project);
+
+        boolean canEdit = !pastDeadline || !alreadyReviewed;
+
+        model.addAttribute("canEdit", canEdit);
+        model.addAttribute("alreadyReviewed", alreadyReviewed);
+        model.addAttribute("peerReviews", peerReviewList);
+        model.addAttribute("project", project);
+
+        if (!canEdit && alreadyReviewed) {
+            List<PeerReview> submittedReviews = peerReviewRepository.findByReviewerAndProject(currentStudent, project);
+            model.addAttribute("submittedReviews", submittedReviews);
+        }
+
+        return "student/givePeerReviews";
+    }
+
+    @PostMapping("/peerReview/project/{projectId}/submit")
+    public String submitPeerReviews(@PathVariable Long projectId, @AuthenticationPrincipal CurrentUser currentUser, @ModelAttribute PeerReviewList peerReviewList, RedirectAttributes redirectAttributes) {
+        User reviewer = currentUser.getUser();
+
+        for (PeerReview peerReview : peerReviewList.getPeerReviews()) {
+            if (peerReview.getScore() > 0 && peerReview.getReviewee() != null) {
+                peerReviewService.savePeerReview(reviewer, peerReview.getReviewee(), projectId, peerReview.getScore(), peerReview.getComment());
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("success", "Your peer reviews have been submitted.");
+        return "redirect:/student/peerReview";
     }
 
 

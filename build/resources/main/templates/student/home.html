@@ -24,7 +24,7 @@
     <h2>Current Projects:</h2>
 
     <div class="projects-list">
-        <a th:each="project : ${currentProjects}" th:href="@{|/student/project/${project.id}|}" class="project-card">
+        <a th:each="project : ${currentProjects}" th:href="@{|/student/project/${project.Id}|}" class="project-card">
             <div class="project-title" th:text="${project.title}">Project Title</div>
             <div class="project-description" th:text="${project.description}">Short project description...</div>
         </a>
@@ -33,7 +33,7 @@
     <h2 style="margin-top: 40px;">Completed Projects</h2>
 
     <div class="projects-list completed-list">
-        <a th:each="project : ${completedProjects}" th:href="@{|/student/project/${project.id}|}" class="project-card completed-card">
+        <a th:each="project : ${completedProjects}" th:href="@{|/student/project/${project.Id}|}" class="project-card completed-card">
             <div class="project-title" th:text="${project.title}">Project Title</div>
             <div class="project-description" th:text="${project.description}">Short project description...</div>
         </a>
