@@ -87,6 +87,7 @@ public class ProjectController {
         project.setTitle(form.getTitle());
         project.setDescription(form.getDescription());
         project.setGroupCapacity(form.getGroupCapacity());
+        project.setStudents(projectRepository.findById(id).get().getStudents());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime deadline = LocalDateTime.parse(form.getDeadline(), formatter);

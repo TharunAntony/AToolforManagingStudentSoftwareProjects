@@ -49,6 +49,8 @@ public class StudentController {
 
     @Autowired
     private PeerReviewRepository peerReviewRepository;
+    @Autowired
+    private MarkRepository markRepository;
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
@@ -147,9 +149,9 @@ public class StudentController {
         Groups studentGroup = null;
 
         //Check if the student is assigned to a group for this project
-        for (GroupMember gm : memberships) {
-            if (gm.getGroup() != null && gm.getGroup().getProject().getId().equals(project.getId())) {
-                studentGroup = gm.getGroup();
+        for (GroupMember groupMember : memberships) {
+            if (groupMember.getGroup() != null && groupMember.getGroup().getProject().getId().equals(project.getId())) {
+                studentGroup = groupMember.getGroup();
                 break;
             }
         }
@@ -163,9 +165,12 @@ public class StudentController {
             model.addAttribute("submission", null);
         }
 
+        double adjustedMark = markRepository.findByStudentAndProject(user.getStudentDetails(), project).getAdjustedMark();
+
         model.addAttribute("project", project);
         model.addAttribute("group", studentGroup);
         model.addAttribute("groupMembers", groupMembers);
+        model.addAttribute("adjustedMark", adjustedMark);
 
         return "student/viewProject";
     }
@@ -247,10 +252,12 @@ public class StudentController {
         List<GroupMember> groupMembers = groupMemberRepository.findByGroup(group);
         List<PeerReview> peerReviewList = peerReviewService.getPeerReviews(currentStudent, groupMembers, group, project);
 
-        boolean pastDeadline = project.getDeadline().isBefore(java.time.LocalDateTime.now());
-        boolean alreadyReviewed = peerReviewService.studentReviewed(currentStudent, project);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime deadlineWithBuffer = project.getDeadline().plusDays(3);
 
-        boolean canEdit = !pastDeadline || !alreadyReviewed;
+        boolean alreadyReviewed = peerReviewService.studentReviewed(currentStudent, project);
+        boolean canEdit = now.isBefore(deadlineWithBuffer);
+
 
         model.addAttribute("canEdit", canEdit);
         model.addAttribute("alreadyReviewed", alreadyReviewed);
@@ -268,6 +275,16 @@ public class StudentController {
     @PostMapping("/peerReview/project/{projectId}/submit")
     public String submitPeerReviews(@PathVariable Long projectId, @AuthenticationPrincipal CurrentUser currentUser, @ModelAttribute PeerReviewList peerReviewList, RedirectAttributes redirectAttributes) {
         User reviewer = currentUser.getUser();
+
+        Project project = projectService.getProjectById(projectId);
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime deadlineWithBuffer = project.getDeadline().plusDays(3);
+
+        if (now.isAfter(deadlineWithBuffer)) {
+            redirectAttributes.addFlashAttribute("error", "Peer review deadline has passed. You cannot submit now.");
+            return "redirect:/student/peerReview";
+        }
+
 
         for (PeerReview peerReview : peerReviewList.getPeerReviews()) {
             if (peerReview.getScore() > 0 && peerReview.getReviewee() != null) {

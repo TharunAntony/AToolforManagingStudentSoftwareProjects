@@ -13,6 +13,7 @@
 
 <h1 th:text="${project.title}">Project Title</h1>
 
+<div th:if="${canReturnMarks}">
 <form th:action="@{'/convenor/submissions/project/' +${project.id}+ '/saveMarks'}" method="post">
     <table>
         <tr>
@@ -34,6 +35,11 @@
     </table>
     <button type="submit">Submit Marks</button>
 </form>
+</div>
+
+<div th:if="${!canReturnMarks}" class="wait-message">
+    <p>Marks can only be returned 3 days after the project deadline. Please wait until the peer review period is over.</p>
+</div>
 
 <p th:if="${success}" th:text="${success}"></p>
 

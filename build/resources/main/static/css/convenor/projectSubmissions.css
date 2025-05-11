@@ -23,3 +23,13 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+
+.wait-message {
+    margin-top: 30px;
+    padding: 15px;
+    background-color: #f8d7da;
+    border-left: 5px solid #a94442;
+    color: #a94442;
+    font-weight: bold;
+    width: fit-content;
+}

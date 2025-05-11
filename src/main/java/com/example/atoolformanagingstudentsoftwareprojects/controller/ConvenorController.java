@@ -8,6 +8,7 @@ import com.example.atoolformanagingstudentsoftwareprojects.model.Groups;
 import com.example.atoolformanagingstudentsoftwareprojects.model.Submission;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
+import com.example.atoolformanagingstudentsoftwareprojects.service.MarkService;
 import com.example.atoolformanagingstudentsoftwareprojects.service.ProjectService;
 import com.example.atoolformanagingstudentsoftwareprojects.service.SubmissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +32,8 @@ public class ConvenorController {
     private ProjectService projectService;
     @Autowired
     private SubmissionService submissionService;
+    @Autowired
+    private MarkService markService;
 
 
     @GetMapping("/home")
@@ -84,8 +88,16 @@ public class ConvenorController {
             }
         }
 
+        boolean canReturnMarks = false;
+        if (project.getDeadline() != null) {
+            LocalDateTime cutoff = project.getDeadline().plusDays(3);
+            canReturnMarks = LocalDateTime.now().isAfter(cutoff);
+        }
+
+
         model.addAttribute("project", project);
         model.addAttribute("submissions", submissions);
+        model.addAttribute("canReturnMarks", canReturnMarks);
         return "convenor/projectSubmissions";
     }
 
@@ -101,6 +113,18 @@ public class ConvenorController {
                 }
             }
         }
+
+        List<Groups> markedGroups = new ArrayList<>();
+        for (SubmissionMarkForm form : marksList.getMarkForms()) {
+            Submission submission = submissionService.findById(form.getSubmissionId());
+            if (submission != null) {
+                submission.setFinalGroupMark(form.getMark());
+                submissionService.saveSubmission(submission);
+                markedGroups.add(submission.getGroup());
+            }
+        }
+
+        markService.calculateAndSaveAdjustedMarks(markedGroups);
 
         redirectAttributes.addFlashAttribute("success", "Marks saved successfully!");
         return "redirect:/convenor/submissions/project/" + projectId;
