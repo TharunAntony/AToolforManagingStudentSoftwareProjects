@@ -19,18 +19,19 @@ public class ProjectService {
 
     @Autowired
     private ProjectRepository projectRepository;
-
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private StudentDetailsRepository studentDetailsRepository;
-
     @Autowired
     private GroupsRepository groupsRepository;
-
     @Autowired
     private GroupMemberRepository groupMemberRepository;
+    @Autowired
+    private PeerReviewRepository peerReviewRepository;
+    @Autowired
+    private SubmissionRepository submissionRepository;
+    @Autowired
+    private MarkRepository markRepository;
+
 
     //Creates and saves the details of a new project
     public void saveProject(ProjectForm form,@AuthenticationPrincipal CurrentUser currentUser) {
@@ -118,16 +119,41 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid project ID: " + projectId));
 
-        List<Groups> groups = project.getGroups();
-        // Delete all members first
-        List<GroupMember> allMembers = groupMemberRepository.findByGroup_Project(project);
-        groupMemberRepository.deleteAll(allMembers);
+        List<Groups> groups = new ArrayList<>(project.getGroups()); // Make a copy to avoid concurrent modification
 
-        // Then delete the groups
-        groupsRepository.deleteByProjectId(projectId);
+        for (Groups group : groups) {
+            // Delete peer reviews
+            peerReviewRepository.deleteByGroup(group);
 
+            // Delete student marks
+            List<GroupMember> members = groupMemberRepository.findByGroup(group);
+            for (GroupMember member : members) {
+                StudentDetails student = member.getStudent();
+                Mark mark = markRepository.findByStudentAndProject(student, project);
+                if (mark != null) {
+                    markRepository.delete(mark);
+                }
+            }
 
+            // Delete group members
+            groupMemberRepository.deleteAll(members);
+
+            // Delete submission
+            Submission submission = submissionRepository.findByGroup(group);
+            if (submission != null) {
+                submission.setGroup(null);
+                submissionRepository.delete(submission);
+            }
+
+            // Break the link between project and group
+            group.setProject(null);
+            project.getGroups().remove(group); // remove from list to prevent JPA from thinking it still exists
+        }
+
+        groupsRepository.deleteAll(groups);
     }
+
+
 
 
 

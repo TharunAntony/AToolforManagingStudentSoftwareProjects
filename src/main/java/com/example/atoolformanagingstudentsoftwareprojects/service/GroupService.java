@@ -54,6 +54,8 @@ public class GroupService {
             }
         }
 
+        System.out.println(studentsNeedingGroups);
+
         //Get rid of students who are already in groups
         students = studentsNeedingGroups;
 
@@ -327,8 +329,8 @@ public class GroupService {
                         totalCompat += compatScore;
                         pairCount++;
                     } catch (Exception exception) {
-                        //If any error occurs during compatibility calculation use a default score of 0
-                        totalCompat += 0;
+                        //If any error occurs during compatibility calculation use a default score of 0.5
+                        totalCompat += 0.5;
                         pairCount++;
                     }
                 }

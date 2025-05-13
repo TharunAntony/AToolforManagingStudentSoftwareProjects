@@ -194,6 +194,7 @@ public class ProjectController {
     @PostMapping("/project/{id}/assignGroups/deleteGroups")
     public String deleteGroups(@PathVariable("id") Long projectId, RedirectAttributes redirectAttributes) {
         try {
+
             projectService.deleteGroupsForProject(projectId);
             redirectAttributes.addFlashAttribute("success", "All groups deleted successfully.");
         } catch (Exception e) {
