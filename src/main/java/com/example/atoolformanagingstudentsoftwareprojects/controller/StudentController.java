@@ -165,12 +165,18 @@ public class StudentController {
             model.addAttribute("submission", null);
         }
 
-        double adjustedMark = markRepository.findByStudentAndProject(user.getStudentDetails(), project).getAdjustedMark();
+        Mark mark = markRepository.findByStudentAndProject(user.getStudentDetails(), project);
+        if (mark != null && mark.getAdjustedMark() != null) {
+            model.addAttribute("adjustedMark", mark.getAdjustedMark());
+        } else {
+            model.addAttribute("adjustedMark", null);
+        }
 
         model.addAttribute("project", project);
         model.addAttribute("group", studentGroup);
         model.addAttribute("groupMembers", groupMembers);
-        model.addAttribute("adjustedMark", adjustedMark);
+
+
 
         return "student/viewProject";
     }

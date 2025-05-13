@@ -341,4 +341,9 @@ public class GroupService {
 
         return groupScores;
     }
+
+    public Groups getGroupById(Long id) {
+        return groupRepository.findById(id).orElse(null);
+    }
+
 }

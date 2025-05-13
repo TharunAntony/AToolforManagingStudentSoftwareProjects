@@ -129,4 +129,17 @@ public class MarkService {
         }
     }
 
+    public void updateAdjustedMarks(List<Mark> marks) {
+
+        for (Mark mark : marks) {
+            Mark existing = markRepository.findById(mark.getId()).orElse(null);
+            if (existing != null) {
+                existing.setAdjustedMark(mark.getAdjustedMark());
+                markRepository.save(existing);
+            }
+        }
+
+    }
+
+
 }

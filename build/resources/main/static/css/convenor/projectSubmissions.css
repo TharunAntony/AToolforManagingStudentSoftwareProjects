@@ -33,3 +33,29 @@ button:hover {
     font-weight: bold;
     width: fit-content;
 }
+
+.view-reviews-btn {
+    display: inline-block;
+    margin: 20px 0;
+    padding: 10px 16px;
+    background-color: #003366;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.view-reviews-btn:hover {
+    background-color: #001f4d;
+}
+
+td ul {
+    padding-left: 16px;
+    margin: 4px 0 0 0;
+}
+
+td ul li {
+    font-size: 14px;
+    color: #002147;
+    list-style-type: disc;
+}

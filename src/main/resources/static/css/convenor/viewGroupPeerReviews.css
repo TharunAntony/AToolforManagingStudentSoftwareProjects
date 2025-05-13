@@ -1,0 +1,84 @@
+.container {
+    padding: 30px;
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    color: #002147;
+    margin-bottom: 25px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #003366;
+    color: white;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+tr:hover {
+    background-color: #f1f5f9;
+}
+
+.no-reviews {
+    background-color: #fce8e6;
+    border-left: 5px solid #cc0000;
+    padding: 15px;
+    color: #cc0000;
+    margin-top: 20px;
+    width: fit-content;
+    font-weight: bold;
+}
+
+.mark-edit-section {
+    margin-top: 40px;
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.mark-edit-section h2 {
+    color: #002147;
+    margin-bottom: 15px;
+}
+
+.mark-edit-section table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mark-edit-section th,
+.mark-edit-section td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+.mark-edit-section input[type="number"] {
+    width: 80px;
+    padding: 5px;
+}
+
+.mark-edit-section button {
+    margin-top: 15px;
+    padding: 8px 16px;
+    font-weight: bold;
+    background-color: #0066ff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

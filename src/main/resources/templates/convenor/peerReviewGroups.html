@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peer Review Groups</title>
+    <link rel="stylesheet" href="/css/convenor/navbar.css">
+    <link rel="stylesheet" href="/css/convenor/peerReviewGroups.css">
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<div class="container">
+    <h1 th:text="${project.title} + ' - Peer Reviews'"></h1>
+
+    <div class="group-list">
+        <a th:each="group : ${groups}" th:href="@{|/convenor/${project.id}/peerReviews/${group.id}|}" class="group-card">
+            <div th:text="${group.groupName}"></div>
+        </a>
+    </div>
+</div>
+</body>
+</html>
