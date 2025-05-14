@@ -468,7 +468,7 @@ public class GroupService {
         //Compares to see if one is leader and other one is a supporter. Higher score if they are.
         if ((p1.getLeadershipPreference() == 1 && p2.getLeadershipPreference() == 2)
                 || (p1.getLeadershipPreference() == 2 && p2.getLeadershipPreference() == 1)) {
-            score += 0.1;
+            score += 0.15;
         }
 
         //Checks when students like to finish the project by
@@ -484,7 +484,7 @@ public class GroupService {
 
 
         if (p1.getPriorExperience() && !p2.getPriorExperience() || !p1.getPriorExperience() && p2.getPriorExperience()) {
-            score += 0.15;
+            score += 0.10;
         }
 
         return score;

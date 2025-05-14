@@ -92,3 +92,23 @@ h1, h2 {
 .groups-btn:hover {
     background-color: #002147;
 }
+
+.view-groups-btn {
+    background-color: #0066cc;
+    color: white;
+    padding: 12px 24px;
+    margin-left: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.view-groups-btn:hover {
+    background-color: #004d99;
+}
+

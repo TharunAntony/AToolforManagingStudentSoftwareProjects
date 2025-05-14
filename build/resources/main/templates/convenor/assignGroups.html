@@ -63,6 +63,9 @@
         <button type="submit" class="groups-btn">Auto Allocate Groups</button>
     </form>
 
+    <a th:href="@{|/convenor/project/${project.id}|}" class="btn view-groups-btn">View Groups</a>
+
+
     <form th:action="@{|/convenor/project/${project.id}/assignGroups/deleteGroups|}" method="post" style="display:inline;">
         <button type="submit" class="btn delete-btn">Delete All Groups</button>
     </form>

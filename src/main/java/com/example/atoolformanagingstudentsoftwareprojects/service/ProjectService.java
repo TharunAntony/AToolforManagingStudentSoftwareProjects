@@ -153,8 +153,33 @@ public class ProjectService {
         groupsRepository.deleteAll(groups);
     }
 
+    //Deletes a project and all associated data safely
+    @Transactional
+    public void deleteProject(Long projectId) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid project ID: " + projectId));
 
+        //Delete all groups and related data for the project
+        deleteGroupsForProject(projectId);
 
+        //Break student links
+        for (StudentDetails student : project.getStudents()) {
+            student.getProjects().remove(project);
+        }
+        project.getStudents().clear();
+
+        // Remove link to convenor
+        ConvenorDetails convenor = project.getConvenor();
+        if (convenor != null) {
+            convenor.getProjects().remove(project);
+        }
+
+        // Save project after breaking links
+        projectRepository.save(project);
+
+        //Delete the actual project
+        projectRepository.delete(project);
+    }
 
 
 }

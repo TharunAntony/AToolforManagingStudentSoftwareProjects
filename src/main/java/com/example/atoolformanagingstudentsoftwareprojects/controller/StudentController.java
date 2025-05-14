@@ -1,7 +1,5 @@
 package com.example.atoolformanagingstudentsoftwareprojects.controller;
 
-import com.example.atoolformanagingstudentsoftwareprojects.dto.PeerReviewList;
-import com.example.atoolformanagingstudentsoftwareprojects.dto.StudentPreferencesForm;
 import com.example.atoolformanagingstudentsoftwareprojects.model.*;
 import com.example.atoolformanagingstudentsoftwareprojects.repository.*;
 import com.example.atoolformanagingstudentsoftwareprojects.service.*;
@@ -14,7 +12,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -23,32 +20,14 @@ public class StudentController {
 
     @Autowired
     private StudentService studentService;
-
-    @Autowired
-    private StudentPreferencesService studentPreferencesService;
-
-    @Autowired
-    private StudentDetailsRepository studentDetailsRepository;
-
     @Autowired
     private ProjectService projectService;
-
     @Autowired
     private GroupMemberRepository groupMemberRepository;
-
     @Autowired
     private SubmissionService submissionService;
     @Autowired
     private ProjectRepository projectRepository;
-    @Autowired
-    private SubmissionRepository submissionRepository;
-    @Autowired
-    private GroupsRepository groupsRepository;
-    @Autowired
-    private PeerReviewService peerReviewService;
-
-    @Autowired
-    private PeerReviewRepository peerReviewRepository;
     @Autowired
     private MarkRepository markRepository;
 
@@ -77,52 +56,6 @@ public class StudentController {
         model.addAttribute("completedProjects", completedProjects);
         model.addAttribute("currentProjects", currentProjects);
         return "student/home";
-    }
-
-    @GetMapping("/preferences")
-    public String viewPreferences(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
-        User user = currentUser.getUser();
-        StudentPreferences preferences = studentPreferencesService.getPreferencesByStudent(user);
-
-        model.addAttribute("preferences", preferences);
-        model.addAttribute("username", user.getUsername());
-        return "student/viewPreferences";
-    }
-
-    @GetMapping("/preferences/manage")
-    public String showEditPreferencesForm(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
-        User user = currentUser.getUser();
-        StudentPreferences preferences = studentPreferencesService.getPreferencesByStudent(user);
-
-        StudentPreferencesForm form;
-        if (preferences != null) {
-            form = studentPreferencesService.convertToForm(preferences);
-        } else {
-            form = new StudentPreferencesForm();
-        }
-
-        model.addAttribute("preferencesForm", form);
-        model.addAttribute("username", user.getUsername());
-        return "student/managePreferences";
-    }
-
-    @PostMapping("/preferences/manage")
-    public String updatePreferences(@ModelAttribute("preferencesForm") StudentPreferencesForm form, @AuthenticationPrincipal CurrentUser currentUser) {
-        StudentDetails studentDetails = studentDetailsRepository.findByStudent(currentUser.getUser());
-
-        StudentPreferences preferences = new StudentPreferences();
-        preferences.setStudentDetails(studentDetails);
-        preferences.setWorkingStyle(form.getWorkingStyle());
-        preferences.setWorkingHours(form.getWorkingHours());
-        preferences.setTechnicalSkill(form.getTechnicalSkill());
-        preferences.setCommunicationSkill(form.getCommunicationSkill());
-        preferences.setLeadershipPreference(form.getLeadershipPreference());
-        preferences.setDeadlineApproach(form.getDeadlineApproach());
-        preferences.setTeamworkExperience(form.getTeamworkExperience());
-        preferences.setPriorExperience(form.getPriorExperience());
-
-        studentPreferencesService.savePreferences(preferences, currentUser.getUser());
-        return "redirect:/student/preferences";
     }
 
     @GetMapping("/projects")
@@ -214,92 +147,6 @@ public class StudentController {
 
         redirectAttributes.addFlashAttribute("success", "Project submitted successfully!");
         return "redirect:/student/home";
-    }
-
-    @GetMapping("/peerReview")
-    public String peerReview(@AuthenticationPrincipal CurrentUser currentUser, Model model){
-        User user = currentUser.getUser();
-        List<Project> pendingReviewProjects = new ArrayList<>();
-        List<Project> submittedReviewProjects = new ArrayList<>();
-
-        List<Groups> studentGroups = studentService.getStudentGroups(user.getStudentDetails().getId());
-
-        for (Groups group : studentGroups) {
-            Submission submission = group.getSubmission();
-
-            if (submission != null && submission.isSubmitted()) {
-                Project project = group.getProject();
-
-                boolean hasGivenReviews = peerReviewService.studentReviewed(user, project);
-                if (hasGivenReviews) {
-                    submittedReviewProjects.add(project);
-                } else {
-                    pendingReviewProjects.add(project);
-                }
-            }
-        }
-
-        model.addAttribute("pendingReviewProjects", pendingReviewProjects);
-        model.addAttribute("submittedReviewProjects", submittedReviewProjects);
-        return "student/peerReviews";
-    }
-
-    @GetMapping("/peerReview/project/{projectId}")
-    public String showPeerReviewForm(@PathVariable Long projectId, @AuthenticationPrincipal CurrentUser currentUser, Model model) {
-        User currentStudent = currentUser.getUser();
-        Project project = projectService.getProjectById(projectId);
-
-        Groups group = studentService.getGroupForProject(currentStudent, project);
-        if (group == null) {
-            model.addAttribute("error", "You are not part of a group for this project.");
-            return "redirect:/student/peerReview";
-        }
-
-        List<GroupMember> groupMembers = groupMemberRepository.findByGroup(group);
-        List<PeerReview> peerReviewList = peerReviewService.getPeerReviews(currentStudent, groupMembers, group, project);
-
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime deadlineWithBuffer = project.getDeadline().plusDays(3);
-
-        boolean alreadyReviewed = peerReviewService.studentReviewed(currentStudent, project);
-        boolean canEdit = now.isBefore(deadlineWithBuffer);
-
-
-        model.addAttribute("canEdit", canEdit);
-        model.addAttribute("alreadyReviewed", alreadyReviewed);
-        model.addAttribute("peerReviews", peerReviewList);
-        model.addAttribute("project", project);
-
-        if (!canEdit && alreadyReviewed) {
-            List<PeerReview> submittedReviews = peerReviewRepository.findByReviewerAndProject(currentStudent, project);
-            model.addAttribute("submittedReviews", submittedReviews);
-        }
-
-        return "student/givePeerReviews";
-    }
-
-    @PostMapping("/peerReview/project/{projectId}/submit")
-    public String submitPeerReviews(@PathVariable Long projectId, @AuthenticationPrincipal CurrentUser currentUser, @ModelAttribute PeerReviewList peerReviewList, RedirectAttributes redirectAttributes) {
-        User reviewer = currentUser.getUser();
-
-        Project project = projectService.getProjectById(projectId);
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime deadlineWithBuffer = project.getDeadline().plusDays(3);
-
-        if (now.isAfter(deadlineWithBuffer)) {
-            redirectAttributes.addFlashAttribute("error", "Peer review deadline has passed. You cannot submit now.");
-            return "redirect:/student/peerReview";
-        }
-
-
-        for (PeerReview peerReview : peerReviewList.getPeerReviews()) {
-            if (peerReview.getScore() > 0 && peerReview.getReviewee() != null) {
-                peerReviewService.savePeerReview(reviewer, peerReview.getReviewee(), projectId, peerReview.getScore(), peerReview.getComment());
-            }
-        }
-
-        redirectAttributes.addFlashAttribute("success", "Your peer reviews have been submitted.");
-        return "redirect:/student/peerReview";
     }
 
 

@@ -101,6 +101,13 @@ public class ProjectController {
         return "redirect:/convenor/projects";
     }
 
+    @PostMapping("/project/{id}/delete")
+    public String deleteProject(@PathVariable Long id) {
+        projectService.deleteProject(id);
+        return "redirect:/convenor/projects";
+    }
+
+
     @GetMapping("/listAssignStudents")
     public String showAssignStudents(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         User user = currentUser.getUser();

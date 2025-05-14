@@ -75,7 +75,7 @@ public class MarkService {
 
             for (User user : users) {
                 List<Integer> scores = receivedScores.get(user.getId());
-                if (scores == null || scores.size() == 0) {
+                if (scores == null || scores.isEmpty()) {
                     averages.put(user.getId(), 0.0);
                     allAverages.add(0.0);
                     continue;
@@ -108,8 +108,8 @@ public class MarkService {
                 double studentAvg = averages.get(user.getId());
 
                 double factor = studentAvg / groupAvg;
-                if (factor < 0.8) factor = 0.8;
-                if (factor > 1.2) factor = 1.2;
+                if (factor < 0.9) factor = 0.9;
+                if (factor > 1.1) factor = 1.1;
 
                 double finalMark = groupMark * factor;
                 finalMark = Math.round(finalMark * 100.0) / 100.0;
