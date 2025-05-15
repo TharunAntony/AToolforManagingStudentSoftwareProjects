@@ -2,12 +2,8 @@ package com.example.atoolformanagingstudentsoftwareprojects.controller;
 
 import com.example.atoolformanagingstudentsoftwareprojects.dto.ProjectForm;
 import com.example.atoolformanagingstudentsoftwareprojects.model.*;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.ProjectRepository;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
-import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
-import com.example.atoolformanagingstudentsoftwareprojects.service.CustomUserDetailsService;
-import com.example.atoolformanagingstudentsoftwareprojects.service.GroupService;
-import com.example.atoolformanagingstudentsoftwareprojects.service.ProjectService;
+import com.example.atoolformanagingstudentsoftwareprojects.repository.*;
+import com.example.atoolformanagingstudentsoftwareprojects.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -33,6 +29,12 @@ public class ProjectController {
     private CustomUserDetailsService userService;
     @Autowired
     private GroupService groupService;
+    @Autowired
+    private GroupMemberRepository groupMemberRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private PeerReviewRepository peerReviewRepository;
 
     @GetMapping("/create-project")
     public String showCreateProjectForm(Model model) {
@@ -164,7 +166,27 @@ public class ProjectController {
         }
         Project project = projectService.getProjectById(projectId);
 
-        project.getStudents().removeIf(details -> studentIds.contains(details.getStudent().getId()));
+        //Remove each student from any group in this project
+        for (Long studentId : studentIds) {
+            StudentDetails student = userRepository.findById(studentId)
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid student ID: " + studentId))
+                    .getStudentDetails();
+
+            //Find any group memberships this student has for the project
+            List<GroupMember> groupMemberships = groupMemberRepository.findByStudent(student);
+            for (GroupMember gm : groupMemberships) {
+                if (gm.getGroup() != null && gm.getGroup().getProject().getId().equals(projectId)) {
+                    groupMemberRepository.delete(gm); // remove from group
+                }
+            }
+
+            // Delete peer reviews made by this student for this project
+            List<PeerReview> reviewsByStudent = peerReviewRepository.findByReviewerAndProject(student.getStudent(), project);
+            peerReviewRepository.deleteAll(reviewsByStudent);
+
+            //Finally, remove from project
+            project.getStudents().removeIf(s -> s.getStudent().getId().equals(studentId));
+        }
 
         projectService.updateProject(project);
         return "redirect:/convenor/project/{projectId}/manageStudents";

@@ -18,4 +18,6 @@ public interface GroupMemberRepository extends JpaRepository<GroupMember, Long> 
     List<GroupMember> findByGroup(Groups group);
 
     List<GroupMember> findByStudent(StudentDetails studentDetails);
+
+    GroupMember findByStudentAndGroup(StudentDetails studentDetails, Groups group);
 }

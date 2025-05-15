@@ -10,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface StudentDetailsRepository extends JpaRepository<StudentDetails, Long> {
 
     StudentDetails findByStudent(User user);
+
+    StudentDetails findByStudentId(Long studentId);
 }

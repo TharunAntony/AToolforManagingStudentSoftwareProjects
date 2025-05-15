@@ -22,38 +22,45 @@ public class MarkService {
     @Autowired
     private MarkRepository markRepository;
 
+    // Calculates and saves adjusted individual marks for all students in each group
     public void calculateAndSaveAdjustedMarks(List<Groups> groupList) {
 
         for (Groups group : groupList) {
 
+            //Get the submission for the group and skip if it doesn’t exist or hasn’t been marked
             Submission submission = group.getSubmission();
-
             if (submission == null || !submission.isSubmitted() || submission.getFinalGroupMark() == null) {
                 continue;
             }
 
+            //Store the original group mark
             double groupMark = submission.getFinalGroupMark();
 
+            //Get all users in the group
             List<GroupMember> members = groupMemberRepository.findByGroup(group);
             List<User> users = new ArrayList<>();
             for (GroupMember gm : members) {
                 users.add(gm.getStudent().getStudent());
             }
 
+            //Get all peer reviews for this group
             List<PeerReview> peerReviews = peerReviewRepository.findByProjectAndGroup(group.getProject(), group);
 
+            // Prepare a map to store all scores each student received
             Map<Long, List<Integer>> receivedScores = new HashMap<>();
             for (User user : users) {
                 receivedScores.put(user.getId(), new ArrayList<>());
             }
 
+            //Fill in the map with actual review scores for each student
             for (PeerReview review : peerReviews) {
                 if (review.getReviewee() != null && receivedScores.containsKey(review.getReviewee().getId())) {
                     receivedScores.get(review.getReviewee().getId()).add(review.getScore());
                 }
             }
 
-            int expectedReviews = users.size() * (users.size() - 1);
+            //If too few peer reviews were submitted, just return the raw group mark
+            int expectedReviews = users.size() * (users.size() - 1); // everyone reviews everyone (except themselves)
             if (peerReviews.size() < expectedReviews / 2.0) {
                 for (GroupMember gm : members) {
                     StudentDetails student = gm.getStudent();
@@ -67,9 +74,10 @@ public class MarkService {
                     mark.setAdjustedMark(Math.min(groupMark, 100.0));
                     markRepository.save(mark);
                 }
-                continue;
+                continue; // skip to next group
             }
 
+            //Calculate each student’s average received score
             Map<Long, Double> averages = new HashMap<>();
             List<Double> allAverages = new ArrayList<>();
 
@@ -90,6 +98,7 @@ public class MarkService {
                 allAverages.add(avg);
             }
 
+            //Calculate the overall average across the group (used for normalisation)
             double groupAvg = 0.0;
             if (allAverages.size() > 0) {
                 double total = 0;
@@ -99,22 +108,31 @@ public class MarkService {
                 groupAvg = total / allAverages.size();
             }
 
+            // If group average is somehow 0 (shouldn’t happen), skip
             if (groupAvg == 0) {
                 continue;
             }
 
+            //Now apply the mark adjustment for each student
             for (User user : users) {
                 StudentDetails student = user.getStudentDetails();
                 double studentAvg = averages.get(user.getId());
 
+                //Normalise student score by comparing it to the group average
                 double factor = studentAvg / groupAvg;
+
+                //Clamp factor to be between 0.9 and 1.1 to prevent extreme changes
                 if (factor < 0.9) factor = 0.9;
                 if (factor > 1.1) factor = 1.1;
 
+                // Multiply group mark by factor to get adjusted mark
                 double finalMark = groupMark * factor;
                 finalMark = Math.round(finalMark * 100.0) / 100.0;
+
+                //Cap to 100
                 if (finalMark > 100) finalMark = 100;
 
+                //Save adjusted mark to database
                 Mark mark = markRepository.findByStudentAndProject(student, group.getProject());
                 if (mark == null) {
                     mark = new Mark();
@@ -128,6 +146,7 @@ public class MarkService {
             }
         }
     }
+
 
     public void updateAdjustedMarks(List<Mark> marks) {
 
