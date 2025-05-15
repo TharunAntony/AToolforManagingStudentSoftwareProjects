@@ -38,7 +38,7 @@ public class ConvenorController {
         List<Project> currentProjects = new ArrayList<>();
 
         for (Project project : projects) {
-            if(project.getDeadline().isBefore(LocalDateTime.now())) {
+            if(project.getDeadline().isAfter(LocalDateTime.now())) {
                 currentProjects.add(project);
             }
         }

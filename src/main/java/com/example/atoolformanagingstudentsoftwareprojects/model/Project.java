@@ -37,6 +37,7 @@ public class Project {
 
     //Details about the project
     private String Title;
+    @Lob
     private String Description;
     private LocalDateTime Deadline;
     private Integer groupCapacity;

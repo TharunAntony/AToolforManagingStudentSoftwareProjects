@@ -9,7 +9,7 @@ public class StudentPreferences{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_details_id", nullable = false)
     private StudentDetails studentDetails;
 
