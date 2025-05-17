@@ -4,7 +4,6 @@ package com.example.atoolformanagingstudentsoftwareprojects.controller;
 import com.example.atoolformanagingstudentsoftwareprojects.dto.SubmissionMarkForm;
 import com.example.atoolformanagingstudentsoftwareprojects.dto.SubmissionMarkFormList;
 import com.example.atoolformanagingstudentsoftwareprojects.model.*;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.*;
 import com.example.atoolformanagingstudentsoftwareprojects.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,8 +21,6 @@ import java.util.List;
 public class ConvenorController {
 
     @Autowired
-    private ProjectRepository projectRepository;
-    @Autowired
     private ProjectService projectService;
     @Autowired
     private SubmissionService submissionService;
@@ -34,7 +31,7 @@ public class ConvenorController {
     @GetMapping("/home")
     public String convenorHome(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         User user = currentUser.getUser();
-        List<Project> projects = projectRepository.findByConvenor(user.getConvenorDetails());
+        List<Project> projects = projectService.getProjects(user);
         List<Project> currentProjects = new ArrayList<>();
 
         for (Project project : projects) {
@@ -67,7 +64,7 @@ public class ConvenorController {
             }
 
             if(submissionCount > 0){
-                project.setSubmissionCount(submissionCount); // transient field
+                project.setSubmissionCount(submissionCount);
                 projectsWithSubmissions.add(project);
             }
         }

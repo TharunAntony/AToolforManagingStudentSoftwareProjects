@@ -23,6 +23,14 @@ public class PeerReviewService {
         return reviews != null && !reviews.isEmpty();
     }
 
+    public List<PeerReview> findByReviewerAndProject(User student, Project project) {
+        return peerReviewRepository.findByReviewerAndProject(student, project);
+    }
+
+    public List<PeerReview> findByProjectAndGroup(Project project, Groups group){
+        return peerReviewRepository.findByProjectAndGroup(project, group);
+    }
+
     public List<PeerReview> getPeerReviews(User currentStudent, List<GroupMember> groupMembers, Groups group, Project project) {
         List<PeerReview> peerReviewList = new ArrayList<>();
 

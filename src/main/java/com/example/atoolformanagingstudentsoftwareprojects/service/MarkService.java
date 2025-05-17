@@ -100,7 +100,7 @@ public class MarkService {
 
             //Calculate the overall average across the group (used for normalisation)
             double groupAvg = 0.0;
-            if (allAverages.size() > 0) {
+            if (!allAverages.isEmpty()) {
                 double total = 0;
                 for (double a : allAverages) {
                     total += a;
@@ -158,6 +158,10 @@ public class MarkService {
             }
         }
 
+    }
+
+    public Mark findMarkByStudentAndProject(StudentDetails student, Project project) {
+        return markRepository.findByStudentAndProject(student, project);
     }
 
 

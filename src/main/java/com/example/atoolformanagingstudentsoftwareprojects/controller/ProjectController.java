@@ -19,12 +19,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("/convenor")
 public class ProjectController {
-    @Autowired
-    private ProjectRepository projectRepository;
+
     @Autowired
     private ProjectService projectService;
-    @Autowired
-    private StudentDetailsRepository studentDetailsRepository;
     @Autowired
     private CustomUserDetailsService userService;
     @Autowired
@@ -32,9 +29,9 @@ public class ProjectController {
     @Autowired
     private GroupMemberRepository groupMemberRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private PeerReviewRepository peerReviewRepository;
+    @Autowired
+    private GroupMemberService groupMemberService;
 
     @GetMapping("/create-project")
     public String showCreateProjectForm(Model model) {
@@ -63,8 +60,8 @@ public class ProjectController {
     //Shows a page with the details of a single project
     @GetMapping("/project/{id}")
     public String viewProject(@PathVariable Long id, Model model) {
-        //Grab the project if it exists, otherwise throw error
-        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+        //Grab the project
+        Project project = projectService.getProjectById(id);
 
         model.addAttribute("project", project);
         model.addAttribute("groups", project.getGroups());
@@ -75,7 +72,7 @@ public class ProjectController {
 
     @GetMapping("/project/{id}/editProject")
     public String editProjectForm(@PathVariable Long id, Model model) {
-        Project project  = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Project not found"));
+        Project project  = projectService.getProjectById(id);
         ProjectForm projectForm = projectService.convertToForm(project);
         model.addAttribute("projectForm", projectForm);
         model.addAttribute("project", project);
@@ -89,7 +86,7 @@ public class ProjectController {
         project.setTitle(form.getTitle());
         project.setDescription(form.getDescription());
         project.setGroupCapacity(form.getGroupCapacity());
-        project.setStudents(projectRepository.findById(id).get().getStudents());
+        project.setStudents(projectService.getProjectById(id).getStudents());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime deadline = LocalDateTime.parse(form.getDeadline(), formatter);
@@ -113,7 +110,7 @@ public class ProjectController {
     @GetMapping("/listAssignStudents")
     public String showAssignStudents(@AuthenticationPrincipal CurrentUser currentUser, Model model) {
         User user = currentUser.getUser();
-        List<Project> projects = projectRepository.findByConvenor(user.getConvenorDetails());
+        List<Project> projects = projectService.getProjects(user);
         model.addAttribute("username", user.getUsername());
         model.addAttribute("firstName", user.getFirstName());
         model.addAttribute("projects", projects);
@@ -145,8 +142,7 @@ public class ProjectController {
         Project project = projectService.getProjectById(projectId);
 
         for (Long studentId : studentIds) {
-            User studentUser = userService.getUserById(studentId);
-            StudentDetails studentDetails = studentDetailsRepository.findByStudent(studentUser);
+            StudentDetails studentDetails = userService.getUserById(studentId).getStudentDetails();
 
             if (studentDetails != null && !project.getStudents().contains(studentDetails)) {
                 project.getStudents().add(studentDetails);
@@ -168,12 +164,10 @@ public class ProjectController {
 
         //Remove each student from any group in this project
         for (Long studentId : studentIds) {
-            StudentDetails student = userRepository.findById(studentId)
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid student ID: " + studentId))
-                    .getStudentDetails();
+            User student = userService.getUserById(studentId);
 
             //Find any group memberships this student has for the project
-            List<GroupMember> groupMemberships = groupMemberRepository.findByStudent(student);
+            List<GroupMember> groupMemberships = groupMemberService.getAllGroupMemberships(student);
             for (GroupMember gm : groupMemberships) {
                 if (gm.getGroup() != null && gm.getGroup().getProject().getId().equals(projectId)) {
                     groupMemberRepository.delete(gm); // remove from group
@@ -181,7 +175,7 @@ public class ProjectController {
             }
 
             // Delete peer reviews made by this student for this project
-            List<PeerReview> reviewsByStudent = peerReviewRepository.findByReviewerAndProject(student.getStudent(), project);
+            List<PeerReview> reviewsByStudent = peerReviewRepository.findByReviewerAndProject(student, project);
             peerReviewRepository.deleteAll(reviewsByStudent);
 
             //Finally, remove from project

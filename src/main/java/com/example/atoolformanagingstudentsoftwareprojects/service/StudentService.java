@@ -75,5 +75,9 @@ public class StudentService {
         return null;
     }
 
+    public StudentDetails getStudentDetails(User user) {
+        return studentDetailsRepository.findByStudent(user);
+    }
+
 
 }

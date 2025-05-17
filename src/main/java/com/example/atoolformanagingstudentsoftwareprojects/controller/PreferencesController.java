@@ -4,9 +4,9 @@ import com.example.atoolformanagingstudentsoftwareprojects.dto.StudentPreference
 import com.example.atoolformanagingstudentsoftwareprojects.model.StudentDetails;
 import com.example.atoolformanagingstudentsoftwareprojects.model.StudentPreferences;
 import com.example.atoolformanagingstudentsoftwareprojects.model.User;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.StudentDetailsRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.service.CurrentUser;
 import com.example.atoolformanagingstudentsoftwareprojects.service.StudentPreferencesService;
+import com.example.atoolformanagingstudentsoftwareprojects.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,7 +23,7 @@ public class PreferencesController {
     @Autowired
     private StudentPreferencesService studentPreferencesService;
     @Autowired
-    private StudentDetailsRepository studentDetailsRepository;
+    private StudentService studentService;
 
 
     @GetMapping("/preferences")
@@ -55,7 +55,7 @@ public class PreferencesController {
 
     @PostMapping("/preferences/manage")
     public String updatePreferences(@ModelAttribute("preferencesForm") StudentPreferencesForm form, @AuthenticationPrincipal CurrentUser currentUser) {
-        StudentDetails studentDetails = studentDetailsRepository.findByStudent(currentUser.getUser());
+        StudentDetails studentDetails = studentService.getStudentDetails(currentUser.getUser());
 
         StudentPreferences preferences = new StudentPreferences();
         preferences.setStudentDetails(studentDetails);

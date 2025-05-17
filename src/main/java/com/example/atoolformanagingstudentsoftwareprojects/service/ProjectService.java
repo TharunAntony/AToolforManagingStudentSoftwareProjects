@@ -54,6 +54,10 @@ public class ProjectService {
         return projectRepository.findByConvenor(user.getConvenorDetails());
     }
 
+    public List<Project> getProjectsForStudents(User user) {
+        return projectRepository.findBystudents(user.getStudentDetails());
+    }
+
     public Project getProjectById(Long id) {
         return projectRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid project ID: " + id));

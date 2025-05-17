@@ -23,18 +23,16 @@ public class StudentController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private GroupMemberRepository groupMemberRepository;
+    private GroupMemberService groupMemberService;
     @Autowired
     private SubmissionService submissionService;
     @Autowired
-    private ProjectRepository projectRepository;
-    @Autowired
-    private MarkRepository markRepository;
+    private MarkService markService;
 
     @GetMapping("/home")
     public String home(Model model, @AuthenticationPrincipal CurrentUser currentUser) {
         User user = currentUser.getUser();
-        List<Project> projects = projectRepository.findBystudents(user.getStudentDetails());
+        List<Project> projects = projectService.getProjectsForStudents(user);
 
         List<Project> currentProjects = new ArrayList<>();
         List<Project> completedProjects = new ArrayList<>();
@@ -77,7 +75,7 @@ public class StudentController {
         Project project = projectService.getProjectById(projectId);
 
         //Find all group memberships for this student
-        List<GroupMember> memberships = groupMemberRepository.findByStudent(user.getStudentDetails());
+        List<GroupMember> memberships = groupMemberService.getAllGroupMemberships(user);
 
         Groups studentGroup = null;
 
@@ -91,14 +89,14 @@ public class StudentController {
 
         List<GroupMember> groupMembers = new ArrayList<>();
         if (studentGroup != null) {
-            groupMembers = groupMemberRepository.findByGroup(studentGroup);
+            groupMembers = groupMemberService.getGroupMembersByGroup(studentGroup);
             Submission submission = submissionService.findByGroup(studentGroup);
             model.addAttribute("submission", submission);
         }else {
             model.addAttribute("submission", null);
         }
 
-        Mark mark = markRepository.findByStudentAndProject(user.getStudentDetails(), project);
+        Mark mark = markService.findMarkByStudentAndProject(user.getStudentDetails(), project);
         if (mark != null && mark.getAdjustedMark() != null) {
             model.addAttribute("adjustedMark", mark.getAdjustedMark());
         } else {

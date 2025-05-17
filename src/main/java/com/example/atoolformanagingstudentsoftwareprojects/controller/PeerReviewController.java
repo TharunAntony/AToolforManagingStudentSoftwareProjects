@@ -3,9 +3,6 @@ package com.example.atoolformanagingstudentsoftwareprojects.controller;
 import com.example.atoolformanagingstudentsoftwareprojects.dto.MarkListForm;
 import com.example.atoolformanagingstudentsoftwareprojects.dto.PeerReviewList;
 import com.example.atoolformanagingstudentsoftwareprojects.model.*;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.GroupMemberRepository;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.MarkRepository;
-import com.example.atoolformanagingstudentsoftwareprojects.repository.PeerReviewRepository;
 import com.example.atoolformanagingstudentsoftwareprojects.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -31,15 +28,11 @@ public class PeerReviewController {
     @Autowired
     private ProjectService projectService;
     @Autowired
-    private GroupMemberRepository groupMemberRepository;
-    @Autowired
-    private PeerReviewRepository peerReviewRepository;
-    @Autowired
     private GroupService groupService;
     @Autowired
-    private MarkRepository markRepository;
-    @Autowired
     private MarkService markService;
+    @Autowired
+    private GroupMemberService groupMemberService;
 
 
     //Student peer review pages
@@ -82,7 +75,7 @@ public class PeerReviewController {
             return "redirect:/student/peerReview";
         }
 
-        List<GroupMember> groupMembers = groupMemberRepository.findByGroup(group);
+        List<GroupMember> groupMembers = groupMemberService.getGroupMembersByGroup(group);
         List<PeerReview> peerReviewList = peerReviewService.getPeerReviews(currentStudent, groupMembers, group, project);
 
         LocalDateTime now = LocalDateTime.now();
@@ -98,7 +91,7 @@ public class PeerReviewController {
         model.addAttribute("project", project);
 
         if (!canEdit && alreadyReviewed) {
-            List<PeerReview> submittedReviews = peerReviewRepository.findByReviewerAndProject(currentStudent, project);
+            List<PeerReview> submittedReviews = peerReviewService.findByReviewerAndProject(currentStudent, project);
             model.addAttribute("submittedReviews", submittedReviews);
         }
 
@@ -145,12 +138,12 @@ public class PeerReviewController {
     public String viewGroupPeerReviews(@PathVariable Long projectId, @PathVariable Long groupId, Model model) {
         Project project = projectService.getProjectById(projectId);
         Groups group = groupService.getGroupById(groupId);
-        List<PeerReview> reviews = peerReviewRepository.findByProjectAndGroup(project, group);
-        List<GroupMember> groupMembers = groupMemberRepository.findByGroup(group);
+        List<PeerReview> reviews = peerReviewService.findByProjectAndGroup(project, group);
+        List<GroupMember> groupMembers = groupMemberService.getGroupMembersByGroup(group);
 
         List<Mark> marks = new ArrayList<>();
         for (GroupMember member : groupMembers) {
-            Mark mark = markRepository.findByStudentAndProject(member.getStudent(), project);
+            Mark mark = markService.findMarkByStudentAndProject(member.getStudent(), project);
             if (mark != null) {
                 marks.add(mark);
             }
