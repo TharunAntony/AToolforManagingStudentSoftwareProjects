@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -33,6 +30,10 @@ public class GroupServiceTest {
     StudentPreferencesRepository studentPreferencesRepository;
     @Autowired
     GroupService groupService;
+    @Autowired
+    ProjectRepository projectRepository;
+    @Autowired
+    ProjectService projectService;
 
 
     @Test
@@ -74,7 +75,7 @@ public class GroupServiceTest {
 
         assertEquals(0.88, score, 0.01); // Allow a small delta
 
-        System.out.println(score);
+        System.out.println("Compatibility score test passed successfully with a score of" + score);
     }
 
     @Test
@@ -210,7 +211,74 @@ public class GroupServiceTest {
         Map<Long, Double> compatibilityMap = groupService.evaluateGroupCompatibility(List.of(savedGroup));
         double calculatedScore = compatibilityMap.get(savedGroup.getId());
         assertEquals(averageGroupScore, calculatedScore, 0.0001);
-        System.out.println("Group compatibility test passed");
+        System.out.println("Group compatibility test passed with score: " + calculatedScore);
     }
+
+    @Test
+    public void testRandomGroupCompatibility() {
+        Long projectId = 7L;
+
+        //Get the project
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Project not found: " + projectId));
+
+        //Get students assigned to the project
+        List<User> students = projectService.getStudentsAssignedToProject(project);
+
+        int maxPerGroup = project.getGroupCapacity();
+        int runs = 10;
+        List<Double> runCompatScores = new ArrayList<>();
+
+        for (int r = 0; r < runs; r++) {
+            //Shuffle the students randomly
+            Collections.shuffle(students);
+
+            List<Groups> randomGroups = new ArrayList<>();
+
+            for (int i = 0; i < students.size(); i += maxPerGroup) {
+                //Save group before assigning members
+                Groups group = new Groups();
+                group.setProject(project);
+                group.setGroupName("Random Test Group " + r + "-" + (i / maxPerGroup + 1));
+                group = groupsRepository.save(group);
+
+                // Now add members
+                for (int j = i; j < i + maxPerGroup && j < students.size(); j++) {
+                    GroupMember member = new GroupMember();
+                    member.setGroup(group); // Use the saved group with ID
+                    member.setStudent(students.get(j).getStudentDetails());
+                    groupMemberRepository.save(member);
+                }
+
+                randomGroups.add(group);
+            }
+
+            //Evaluate compatibility score for the groups
+            Map<Long, Double> result = groupService.evaluateGroupCompatibility(randomGroups);
+
+            double totalScore = 0;
+            int groupCount = 0;
+
+            for (Double score : result.values()) {
+                totalScore += score;
+                groupCount++;
+            }
+
+            if (groupCount > 0) {
+                double avg = totalScore / groupCount;
+                runCompatScores.add(avg);
+            }
+        }
+
+        //Print results
+        System.out.println("Average compatibility scores of random allocation for project ID 7:");
+        for (int i = 0; i < runCompatScores.size(); i++) {
+            System.out.println("Run " + (i + 1) + ": " + runCompatScores.get(i));
+        }
+
+        assertTrue(true); // Just for manual inspection
+    }
+
+
 
 }

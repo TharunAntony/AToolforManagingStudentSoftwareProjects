@@ -47,7 +47,7 @@ public class PasswordEncryptionTest {
         // Check that the raw password matches the hashed one
         assertTrue(encoder.matches(rawPassword, storedPassword), "Encoded password should match raw password");
 
-        System.out.println("Test passed successfully");
+        System.out.println("Password Test passed successfully");
 
     }
 }

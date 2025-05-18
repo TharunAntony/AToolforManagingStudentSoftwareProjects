@@ -81,7 +81,7 @@ public class GroupService {
 
         //If existing groups have space, use them. Only create new groups if needed.
         if (needNewGroups) {
-            //Calculate how many new groups we need - only for students who won't fit in existing spaces
+            //Calculate how many new groups are needed - only for students who won't fit in existing spaces
             int remainingStudents = students.size() + studentsWithoutPrefs.size() - totalAvailableSpots;
             int additionalGroupsNeeded = calculateBalancedGroupCount(remainingStudents, maxPerGroup);
 
@@ -241,8 +241,6 @@ public class GroupService {
 
     //Now assign remaining students who have preferences
     private void assignRemainingStudents(List<User> students, Map<User, Map<User, Double>> compatScores, List<Groups> availableGroups, Map<Long, Integer> sizes, int maxCap) {
-        //First balance the groups - prioritize groups with fewer members
-        availableGroups.sort(Comparator.comparingInt(g -> sizes.get(g.getId())));
 
         Random rand = new Random();
 
@@ -270,7 +268,7 @@ public class GroupService {
                 double totalScore = 0;
                 for (GroupMember m : members) {
                     User memberUser = m.getStudent().getStudent();
-                    // Get compatibility or use 0.5 as fallback
+                    // Get compatibility or use 0.5 as a fallback
                     double compScore = 0.5; // Default value
                     if (compatScores.containsKey(student) && memberUser != null) {
                         compScore = compatScores.get(student).getOrDefault(memberUser, 0.5);
